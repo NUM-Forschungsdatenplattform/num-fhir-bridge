@@ -164,7 +164,7 @@
                                                 <method>get</method>
                                                 <status>200</status>
                                             </http>
-                                            <time>20000</time>
+                                            <time>35000</time>
                                         </wait>
                                         <log>
                                             <enabled>true</enabled>
