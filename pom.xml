@@ -217,7 +217,7 @@
                                                 <method>get</method>
                                                 <status>200</status>
                                             </http>
-                                            <time>35000</time>
+                                            <time>50000</time>
                                         </wait>
                                         <log>
                                             <enabled>true</enabled>

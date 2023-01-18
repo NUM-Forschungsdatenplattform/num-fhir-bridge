@@ -10,9 +10,11 @@ import ca.uhn.fhir.rest.server.interceptor.RequestValidatingInterceptor;
 import ca.uhn.fhir.rest.server.util.ISearchParamRegistry;
 import org.ehrbase.fhirbridge.security.SmartOnFhirAuthorizationInterceptor;
 import org.openehealth.ipf.boot.fhir.IpfBootFhirServlet;
+import org.openehealth.ipf.boot.fhir.IpfFhirAutoConfiguration;
 import org.openehealth.ipf.boot.fhir.IpfFhirConfigurationProperties;
 import org.openehealth.ipf.commons.ihe.fhir.IpfFhirServlet;
 import org.springframework.beans.factory.ObjectProvider;
+import org.springframework.boot.autoconfigure.AutoConfigureBefore;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -22,6 +24,7 @@ import org.springframework.context.annotation.Primary;
  * {@link Configuration Configuration} for IPF FHIR Servlet.
  */
 @Configuration
+@AutoConfigureBefore({IpfFhirAutoConfiguration.class})
 @EnableConfigurationProperties(CorsProperties.class)
 public class IpfFhirConfiguration {
 
