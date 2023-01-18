@@ -5,6 +5,7 @@ import ca.uhn.fhir.jpa.searchparam.registry.SearchParamRegistryImpl;
 import ca.uhn.fhir.narrative.INarrativeGenerator;
 import ca.uhn.fhir.rest.server.IPagingProvider;
 import ca.uhn.fhir.rest.server.IServerAddressStrategy;
+import ca.uhn.fhir.rest.server.RestfulServerConfiguration;
 import ca.uhn.fhir.rest.server.interceptor.RequestValidatingInterceptor;
 import ca.uhn.fhir.rest.server.util.ISearchParamRegistry;
 import org.ehrbase.fhirbridge.security.SmartOnFhirAuthorizationInterceptor;
@@ -60,4 +61,5 @@ public class IpfFhirConfiguration {
     public ISearchParamRegistry searchParamRegistry() {
         return new SearchParamRegistryImpl();
     }
+
 }

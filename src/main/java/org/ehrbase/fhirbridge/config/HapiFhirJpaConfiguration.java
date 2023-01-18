@@ -30,6 +30,7 @@ import ca.uhn.fhir.jpa.dao.r4.FhirResourceDaoSearchParameterR4;
 import ca.uhn.fhir.jpa.dao.r4.FhirResourceDaoValueSetR4;
 import ca.uhn.fhir.jpa.model.config.PartitionSettings;
 import ca.uhn.fhir.jpa.model.entity.ModelConfig;
+import ca.uhn.fhir.rest.server.util.ISearchParamRegistry;
 import io.minio.BucketExistsArgs;
 import io.minio.MakeBucketArgs;
 import io.minio.MinioClient;
@@ -59,6 +60,7 @@ import org.hl7.fhir.r4.model.SearchParameter;
 import org.hl7.fhir.r4.model.ValueSet;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
@@ -199,10 +201,12 @@ public class HapiFhirJpaConfiguration extends BaseR4Config {
     }
 
     @Bean
-    public IFhirResourceDao<Patient> patientDao() {
+    public IFhirResourceDao<Patient> patientDao(@Qualifier("searchParamRegistry")
+        ISearchParamRegistry searchParamRegistry) {
         JpaResourceDao<Patient> patientDao = new JpaResourceDao<>();
         patientDao.setResourceType(Patient.class);
         patientDao.setContext(fhirContext());
+        patientDao.setSearchParamRegistry(searchParamRegistry);
         return patientDao;
     }
 
