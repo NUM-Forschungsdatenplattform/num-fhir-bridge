@@ -24,7 +24,6 @@ import org.springframework.context.annotation.Primary;
  * {@link Configuration Configuration} for IPF FHIR Servlet.
  */
 @Configuration
-@AutoConfigureBefore({IpfFhirAutoConfiguration.class})
 @EnableConfigurationProperties(CorsProperties.class)
 public class IpfFhirConfiguration {
 

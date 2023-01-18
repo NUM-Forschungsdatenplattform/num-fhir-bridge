@@ -201,12 +201,10 @@ public class HapiFhirJpaConfiguration extends BaseR4Config {
     }
 
     @Bean
-    public IFhirResourceDao<Patient> patientDao(@Qualifier("searchParamRegistry")
-        ISearchParamRegistry searchParamRegistry) {
+    public IFhirResourceDao<Patient> patientDao() {
         JpaResourceDao<Patient> patientDao = new JpaResourceDao<>();
         patientDao.setResourceType(Patient.class);
         patientDao.setContext(fhirContext());
-        patientDao.setSearchParamRegistry(searchParamRegistry);
         return patientDao;
     }
 
