@@ -234,9 +234,10 @@
                                 <phase>pre-integration-test</phase>
                                 <goals>
                                     <goal>build</goal>
-                                    <goal>start</goal>
+                                    <!--<goal>start</goal>-->
                                 </goals>
                             </execution>
+                            <!--
                             <execution>
                                 <id>remove-it-environment</id>
                                 <phase>post-integration-test</phase>
@@ -244,6 +245,7 @@
                                     <goal>stop</goal>
                                 </goals>
                             </execution>
+                            -->
                         </executions>
                     </plugin>
                 </plugins>
