@@ -52,7 +52,6 @@
 
         <docker-image-from>eclipse-temurin:17-jre</docker-image-from>
 
-
         <database.port>5432</database.port>
     </properties>
 
