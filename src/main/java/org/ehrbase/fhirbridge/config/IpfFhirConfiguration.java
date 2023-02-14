@@ -1,24 +1,18 @@
 package org.ehrbase.fhirbridge.config;
 
 import ca.uhn.fhir.context.FhirContext;
-import ca.uhn.fhir.jpa.searchparam.registry.SearchParamRegistryImpl;
 import ca.uhn.fhir.narrative.INarrativeGenerator;
 import ca.uhn.fhir.rest.server.IPagingProvider;
 import ca.uhn.fhir.rest.server.IServerAddressStrategy;
-import ca.uhn.fhir.rest.server.RestfulServerConfiguration;
 import ca.uhn.fhir.rest.server.interceptor.RequestValidatingInterceptor;
-import ca.uhn.fhir.rest.server.util.ISearchParamRegistry;
 import org.ehrbase.fhirbridge.security.SmartOnFhirAuthorizationInterceptor;
 import org.openehealth.ipf.boot.fhir.IpfBootFhirServlet;
-import org.openehealth.ipf.boot.fhir.IpfFhirAutoConfiguration;
 import org.openehealth.ipf.boot.fhir.IpfFhirConfigurationProperties;
 import org.openehealth.ipf.commons.ihe.fhir.IpfFhirServlet;
 import org.springframework.beans.factory.ObjectProvider;
-import org.springframework.boot.autoconfigure.AutoConfigureBefore;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Primary;
 
 /**
  * {@link Configuration Configuration} for IPF FHIR Servlet.
@@ -57,11 +51,4 @@ public class IpfFhirConfiguration {
         authorizationInterceptors.ifAvailable(fhirServlet::registerInterceptor);
         return fhirServlet;
     }
-
-    @Bean
-    @Primary
-    public ISearchParamRegistry searchParamRegistry() {
-        return new SearchParamRegistryImpl();
-    }
-
 }
