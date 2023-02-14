@@ -50,7 +50,7 @@
 
         <docker-maven-plugin.version>0.40.3</docker-maven-plugin.version>
 
-        <docker-image-from>eclipse-temurin:17-jre-jammy</docker-image-from>
+        <docker-image-from>azul/zulu-openjdk:17-jre-latest</docker-image-from>
 
         <database.port>5432</database.port>
     </properties>
@@ -239,10 +239,9 @@
                                 <phase>pre-integration-test</phase>
                                 <goals>
                                     <goal>build</goal>
-                                    <!--<goal>start</goal>-->
+                                    <goal>start</goal>
                                 </goals>
                             </execution>
-                            <!--
                             <execution>
                                 <id>remove-it-environment</id>
                                 <phase>post-integration-test</phase>
@@ -250,7 +249,6 @@
                                     <goal>stop</goal>
                                 </goals>
                             </execution>
-                            -->
                         </executions>
                     </plugin>
                 </plugins>
