@@ -30,12 +30,8 @@ import ca.uhn.fhir.jpa.dao.r4.FhirResourceDaoSearchParameterR4;
 import ca.uhn.fhir.jpa.dao.r4.FhirResourceDaoValueSetR4;
 import ca.uhn.fhir.jpa.model.config.PartitionSettings;
 import ca.uhn.fhir.jpa.model.entity.ModelConfig;
+import ca.uhn.fhir.jpa.searchparam.registry.SearchParamRegistryImpl;
 import ca.uhn.fhir.rest.server.util.ISearchParamRegistry;
-import io.minio.BucketExistsArgs;
-import io.minio.MakeBucketArgs;
-import io.minio.MinioClient;
-import org.ehrbase.fhirbridge.minio.MinioException;
-import org.ehrbase.fhirbridge.minio.MinioService;
 import org.hl7.fhir.r4.model.AuditEvent;
 import org.hl7.fhir.r4.model.CodeSystem;
 import org.hl7.fhir.r4.model.CodeableConcept;
@@ -58,13 +54,10 @@ import org.hl7.fhir.r4.model.Procedure;
 import org.hl7.fhir.r4.model.QuestionnaireResponse;
 import org.hl7.fhir.r4.model.SearchParameter;
 import org.hl7.fhir.r4.model.ValueSet;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Primary;
 
 /**
  * {@link Configuration Configuration} for HAPI FHIR JPA Server.
@@ -101,6 +94,7 @@ public class HapiFhirJpaConfiguration extends BaseR4Config {
     public JpaResourceDao<DocumentReference> documentReferenceDao() {
         JpaResourceDao<DocumentReference> documentReferenceDao = new JpaResourceDao<>();
         documentReferenceDao.setResourceType(DocumentReference.class);
+        documentReferenceDao.setSearchParamRegistry(searchParamRegistry());
         return documentReferenceDao;
     }
 
@@ -109,6 +103,7 @@ public class HapiFhirJpaConfiguration extends BaseR4Config {
         JpaResourceDao<AuditEvent> resourceDao = new JpaResourceDao<>();
         resourceDao.setResourceType(AuditEvent.class);
         resourceDao.setContext(fhirContext());
+        resourceDao.setSearchParamRegistry(searchParamRegistry());
         return resourceDao;
     }
 
@@ -117,6 +112,7 @@ public class HapiFhirJpaConfiguration extends BaseR4Config {
         JpaResourceDao<Condition> conditionDao = new JpaResourceDao<>();
         conditionDao.setResourceType(Condition.class);
         conditionDao.setContext(fhirContext());
+        conditionDao.setSearchParamRegistry(searchParamRegistry());
         return conditionDao;
     }
 
@@ -125,6 +121,7 @@ public class HapiFhirJpaConfiguration extends BaseR4Config {
         JpaResourceDao<Composition> compositionDao = new JpaResourceDao<>();
         compositionDao.setResourceType(Composition.class);
         compositionDao.setContext(fhirContext());
+        compositionDao.setSearchParamRegistry(searchParamRegistry());
         return compositionDao;
     }
 
@@ -133,6 +130,7 @@ public class HapiFhirJpaConfiguration extends BaseR4Config {
         JpaResourceDao<Consent> consentDao = new JpaResourceDao<>();
         consentDao.setResourceType(Consent.class);
         consentDao.setContext(fhirContext());
+        consentDao.setSearchParamRegistry(searchParamRegistry());
         return consentDao;
     }
 
@@ -141,6 +139,7 @@ public class HapiFhirJpaConfiguration extends BaseR4Config {
         JpaResourceDao<Device> deviceDao = new JpaResourceDao<>();
         deviceDao.setResourceType(Device.class);
         deviceDao.setContext(fhirContext());
+        deviceDao.setSearchParamRegistry(searchParamRegistry());
         return deviceDao;
     }
 
@@ -149,6 +148,7 @@ public class HapiFhirJpaConfiguration extends BaseR4Config {
         JpaResourceDao<DiagnosticReport> diagnosticReportDao = new JpaResourceDao<>();
         diagnosticReportDao.setResourceType(DiagnosticReport.class);
         diagnosticReportDao.setContext(fhirContext());
+        diagnosticReportDao.setSearchParamRegistry(searchParamRegistry());
         return diagnosticReportDao;
     }
 
@@ -157,6 +157,7 @@ public class HapiFhirJpaConfiguration extends BaseR4Config {
         JpaResourceDao<Encounter> resourceDao = new JpaResourceDao<>();
         resourceDao.setResourceType(Encounter.class);
         resourceDao.setContext(fhirContext());
+        resourceDao.setSearchParamRegistry(searchParamRegistry());
         return resourceDao;
     }
 
@@ -165,6 +166,7 @@ public class HapiFhirJpaConfiguration extends BaseR4Config {
         JpaResourceDao<Group> groupDao = new JpaResourceDao<>();
         groupDao.setResourceType(Group.class);
         groupDao.setContext(fhirContext());
+        groupDao.setSearchParamRegistry(searchParamRegistry());
         return groupDao;
     }
 
@@ -173,6 +175,7 @@ public class HapiFhirJpaConfiguration extends BaseR4Config {
         JpaResourceDao<Immunization> resourceDao = new JpaResourceDao<>();
         resourceDao.setResourceType(Immunization.class);
         resourceDao.setContext(fhirContext());
+        resourceDao.setSearchParamRegistry(searchParamRegistry());
         return resourceDao;
     }
 
@@ -181,6 +184,7 @@ public class HapiFhirJpaConfiguration extends BaseR4Config {
         JpaResourceDao<Location> locationDao = new JpaResourceDao<>();
         locationDao.setResourceType(Location.class);
         locationDao.setContext(fhirContext());
+        locationDao.setSearchParamRegistry(searchParamRegistry());
         return locationDao;
     }
 
@@ -189,6 +193,7 @@ public class HapiFhirJpaConfiguration extends BaseR4Config {
         JpaResourceDao<MedicationStatement> medicationStatementDao = new JpaResourceDao<>();
         medicationStatementDao.setResourceType(MedicationStatement.class);
         medicationStatementDao.setContext(fhirContext());
+        medicationStatementDao.setSearchParamRegistry(searchParamRegistry());
         return medicationStatementDao;
     }
 
@@ -197,6 +202,7 @@ public class HapiFhirJpaConfiguration extends BaseR4Config {
         JpaResourceDao<Observation> observationDao = new JpaResourceDao<>();
         observationDao.setResourceType(Observation.class);
         observationDao.setContext(fhirContext());
+        observationDao.setSearchParamRegistry(searchParamRegistry());
         return observationDao;
     }
 
@@ -205,6 +211,7 @@ public class HapiFhirJpaConfiguration extends BaseR4Config {
         JpaResourceDao<Patient> patientDao = new JpaResourceDao<>();
         patientDao.setResourceType(Patient.class);
         patientDao.setContext(fhirContext());
+        patientDao.setSearchParamRegistry(searchParamRegistry());
         return patientDao;
     }
 
@@ -213,6 +220,7 @@ public class HapiFhirJpaConfiguration extends BaseR4Config {
         JpaResourceDao<Procedure> procedureDao = new JpaResourceDao<>();
         procedureDao.setResourceType(Procedure.class);
         procedureDao.setContext(fhirContext());
+        procedureDao.setSearchParamRegistry(searchParamRegistry());
         return procedureDao;
     }
 
@@ -221,6 +229,7 @@ public class HapiFhirJpaConfiguration extends BaseR4Config {
         JpaResourceDao<QuestionnaireResponse> questionnaireResponseDao = new JpaResourceDao<>();
         questionnaireResponseDao.setResourceType(QuestionnaireResponse.class);
         questionnaireResponseDao.setContext(fhirContext());
+        questionnaireResponseDao.setSearchParamRegistry(searchParamRegistry());
         return questionnaireResponseDao;
     }
 
@@ -229,6 +238,7 @@ public class HapiFhirJpaConfiguration extends BaseR4Config {
         var codeSystemDao = new FhirResourceDaoCodeSystemR4();
         codeSystemDao.setResourceType(CodeSystem.class);
         codeSystemDao.setContext(fhirContext());
+        codeSystemDao.setSearchParamRegistry(searchParamRegistry());
         return codeSystemDao;
     }
 
@@ -237,6 +247,7 @@ public class HapiFhirJpaConfiguration extends BaseR4Config {
         var valueSetDao = new FhirResourceDaoValueSetR4();
         valueSetDao.setResourceType(ValueSet.class);
         valueSetDao.setContext(fhirContext());
+        valueSetDao.setSearchParamRegistry(searchParamRegistry());
         return valueSetDao;
     }
 
@@ -245,6 +256,7 @@ public class HapiFhirJpaConfiguration extends BaseR4Config {
         var conceptMapDao = new FhirResourceDaoConceptMapR4();
         conceptMapDao.setResourceType(ConceptMap.class);
         conceptMapDao.setContext(fhirContext());
+        conceptMapDao.setSearchParamRegistry(searchParamRegistry());
         return conceptMapDao;
     }
 
@@ -253,70 +265,13 @@ public class HapiFhirJpaConfiguration extends BaseR4Config {
         var searchParameterDao = new FhirResourceDaoSearchParameterR4();
         searchParameterDao.setResourceType(SearchParameter.class);
         searchParameterDao.setContext(fhirContext());
+        searchParameterDao.setSearchParamRegistry(searchParamRegistry());
         return searchParameterDao;
     }
 
-    /**
-     * {@link Configuration} for MinIO.
-     */
-    @Configuration
-    @ConditionalOnProperty(prefix = "fhir-bridge.minio", name = "url")
-    @EnableConfigurationProperties(HapiFhirJpaProperties.MinioProperties.class)
-    public static class MinioConfiguration {
-
-        private static final Logger LOG = LoggerFactory.getLogger(MinioConfiguration.class);
-
-        private final HapiFhirJpaProperties.MinioProperties properties;
-
-        public MinioConfiguration(HapiFhirJpaProperties.MinioProperties properties) {
-            this.properties = properties;
-        }
-
-        @Bean
-        public MinioService minioService(MinioClient minioClient) {
-            try {
-                var found = minioClient.bucketExists(BucketExistsArgs.builder()
-                        .bucket(properties.getBucketName())
-                        .build());
-                if (!found) {
-                    if (properties.isAutoCreateBucket()) {
-                        createBucket(minioClient);
-                    } else {
-                        throw new IllegalStateException("The specified bucket does not exist: " + properties.getBucketName());
-                    }
-                }
-            } catch (Exception e) {
-                throw new MinioException("Error occurred while checking if the specified bucket exists", e);
-            }
-
-            return new MinioService(minioClient, properties.getBucketName(), properties.getUrl());
-        }
-
-        @Bean
-        public MinioClient minioClient() {
-            MinioClient minioClient = MinioClient.builder()
-                    .endpoint(properties.getUrl())
-                    .credentials(properties.getAccessKey(), properties.getSecretKey())
-                    .build();
-
-            minioClient.setTimeout(
-                    properties.getConnectTimeout().toMillis(),
-                    properties.getWriteTimeout().toMillis(),
-                    properties.getReadTimeout().toMillis()
-            );
-
-            return minioClient;
-        }
-
-        private void createBucket(MinioClient minioClient) {
-            try {
-                minioClient.makeBucket(MakeBucketArgs.builder()
-                        .bucket(properties.getBucketName())
-                        .build());
-                LOG.info("Bucket '{}' created successfully", properties.getBucketName());
-            } catch (Exception e) {
-                throw new MinioException("Cannot create the specified bucket", e);
-            }
-        }
+    @Bean
+    @Primary
+    public ISearchParamRegistry searchParamRegistry() {
+        return new SearchParamRegistryImpl();
     }
 }
