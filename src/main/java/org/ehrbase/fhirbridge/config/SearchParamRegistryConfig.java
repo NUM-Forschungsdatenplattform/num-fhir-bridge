@@ -11,9 +11,10 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
 
+@AutoConfigureBefore({SearchParamConfig.class, IpfFhirAutoConfiguration.class})
 @Configuration
 public class SearchParamRegistryConfig {
-  @AutoConfigureBefore({SearchParamConfig.class, IpfFhirAutoConfiguration.class})
+  // @AutoConfigureBefore({SearchParamConfig.class, IpfFhirAutoConfiguration.class})
   @Configuration
   static class CustomSearchParamRegistryConfig {
 
