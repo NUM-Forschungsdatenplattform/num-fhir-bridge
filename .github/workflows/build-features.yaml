@@ -16,6 +16,10 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        java: ['11','17']
+        distribution: ['temurin','zulu']
 
     steps:
       - name: Checkout
@@ -26,8 +30,8 @@ jobs:
       - name: Setup Java
         uses: actions/setup-java@v3
         with:
-          distribution: 'zulu'
-          java-version: '17'
+          distribution: ${{ matrix.distribution }}
+          java-version: ${{ matrix.java }}
           cache: 'maven'
 
       - name: Set some variables for the build
@@ -64,5 +68,5 @@ jobs:
       - name: Build project with Maven
         run: ./mvnw verify
 
-      - name: Docker push image
-        run: ./mvnw io.fabric8:docker-maven-plugin:push
+#      - name: Docker push image
+#        run: ./mvnw io.fabric8:docker-maven-plugin:push

@@ -48,7 +48,7 @@
 
         <docker-image-name>numresearchdataplatform/num-fhir-bridge</docker-image-name>
 
-        <docker-maven-plugin.version>0.40.3</docker-maven-plugin.version>
+        <docker-maven-plugin.version>0.41.0</docker-maven-plugin.version>
 
         <docker-image-from>azul/zulu-openjdk:17-jre-latest</docker-image-from>
 
