@@ -14,16 +14,16 @@ import org.springframework.context.annotation.Primary;
 @AutoConfigureBefore({SearchParamConfig.class, IpfFhirAutoConfiguration.class})
 @Configuration
 public class SearchParamRegistryConfig {
-  // @AutoConfigureBefore({SearchParamConfig.class, IpfFhirAutoConfiguration.class})
+  @AutoConfigureBefore({SearchParamConfig.class, IpfFhirAutoConfiguration.class})
   @Configuration
-  static class CustomSearchParamRegistryConfig {
+  public static class CustomSearchParamRegistryConfig {
 
     private static final Logger LOG = LoggerFactory.getLogger(CustomSearchParamRegistryConfig.class);
 
     @Bean
     @Primary
     public ISearchParamRegistry searchParamRegistry() {
-      LOG.info("CREATE SEARCH_PARAM_REGISTRY ....s");
+      LOG.info("CREATE SEARCH_PARAM_REGISTRY ....");
       return new SearchParamRegistryImpl();
     }
   }
