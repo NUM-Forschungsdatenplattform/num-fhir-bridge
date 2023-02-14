@@ -122,7 +122,7 @@
                                     </run>
                                 </image>
                                 <image>
-                                    <name>numresearchdataplatform/num-ehrbase:0.24.4</name>
+                                    <name>numresearchdataplatform/num-ehrbase:latest</name>
                                     <alias>ehrbase</alias>
                                     <run>
                                         <env>
@@ -177,6 +177,12 @@
                                     <name>${docker-image-name}</name>
                                     <build>
                                         <from>${docker-image-from}</from>
+                                        <buildx>
+                                            <platforms>
+                                                <platform>linux/amd64</platform>
+                                                <platform>linux/arm64</platform>
+                                            </platforms>
+                                        </buildx>
                                         <tags>
                                             <tag>latest</tag>
                                             <tag>${project.version}</tag>
