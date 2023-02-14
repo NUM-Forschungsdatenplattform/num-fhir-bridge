@@ -22,7 +22,7 @@
     <properties>
         <java.version>11</java.version>
         <ipf.version>4.1.0</ipf.version>
-        <!-- Cleanup-->
+
         <skipITs>true</skipITs>
         <commandLineArguments/>
         <checker.version>3.10.0</checker.version>
