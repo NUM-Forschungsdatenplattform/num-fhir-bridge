@@ -20,6 +20,7 @@ public class StatusController implements HealthIndicator {
         this.healthEndpoint = healthEndpoint;
         this.patientEhrRepository = patientEhrRepository;
     }
+
     @GetMapping(path = "/status")
     public ResponseEntity<String> status() {
         return ResponseEntity.ok("UP");
