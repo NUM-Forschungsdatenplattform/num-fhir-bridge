@@ -57,5 +57,4 @@ public class StatusController implements HealthIndicator {
         }
         return false;
     }
-
 }
