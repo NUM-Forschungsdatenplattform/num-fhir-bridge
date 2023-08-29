@@ -968,13 +968,14 @@ commands:
 orbs:
   openjdk-install: cloudesire/openjdk-install@1.2.3
   sonarcloud: sonarsource/sonarcloud@1.0.2
+  browser-tools: circleci/browser-tools@1.4.4
 
 
 executors:
   docker-python3-java11:
     working_directory: ~/projects
     docker:
-      - image: circleci/python:3.8.5-node-browsers
+      - image: cimg/python:3.8.7-browsers
         auth:
           username: $DOCKER_USER
           password: $DOCKER_HUB_PASSWORD
@@ -987,7 +988,7 @@ executors:
       - EHRbase DB is accessible via localhost:5432
     working_directory: ~/projects
     docker:
-      - image: circleci/python:3.8.5-node-browsers
+      - image: cimg/python:3.8.7-browsers
         auth:
           username: $DOCKER_USER
           password: $DOCKER_HUB_PASSWORD
