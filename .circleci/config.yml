@@ -419,7 +419,7 @@ jobs:
 
   tag-version:
     docker:
-      - image: circleci/openjdk:stretch
+      - image: cimg/openjdk:11.0.8
     steps:
       - checkout
       - configure-git-for-ci-bot
