@@ -2,9 +2,8 @@ package org.ehrbase.fhirbridge.fhir.patient;
 
 import ca.uhn.fhir.rest.gclient.ICreateTyped;
 import ca.uhn.fhir.rest.server.exceptions.UnprocessableEntityException;
-import org.ehrbase.fhirbridge.ehr.converter.ConversionException;
 import org.ehrbase.fhirbridge.comparators.CustomTemporalAcessorComparator;
-import org.ehrbase.fhirbridge.ehr.converter.specific.patient.PatientCompositionConverter;
+import org.ehrbase.fhirbridge.ehr.converter.specific.geccoPatient.PatientCompositionConverter;
 import org.ehrbase.fhirbridge.ehr.opt.geccopersonendatencomposition.GECCOPersonendatenComposition;
 import org.ehrbase.fhirbridge.ehr.opt.geccopersonendatencomposition.definition.*;
 import org.ehrbase.fhirbridge.fhir.AbstractMappingTestSetupIT;
@@ -61,8 +60,7 @@ class PatientIT extends AbstractMappingTestSetupIT {
         ICreateTyped createTyped = client.create().resource(resource.replaceAll(PATIENT_ID_TOKEN, PATIENT_ID));
         Exception exception = Assertions.assertThrows(UnprocessableEntityException.class, createTyped::execute);
 
-        assertEquals("HTTP 422 : Default profile is not supported for Patient. One of the following profiles is expected: " +
-                "[https://www.netzwerk-universitaetsmedizin.de/fhir/StructureDefinition/Patient]", exception.getMessage());
+        assertEquals("HTTP 422 : Default profile is not supported for Patient. One of the following profiles is expected: [https://www.netzwerk-universitaetsmedizin.de/fhir/StructureDefinition/Patient, https://www.medizininformatik-initiative.de/fhir/core/modul-person/StructureDefinition/Patient, https://www.medizininformatik-initiative.de/fhir/core/modul-person/StructureDefinition/PatientPseudonymisiert]", exception.getMessage());
     }
 
     @Override
