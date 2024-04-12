@@ -39,7 +39,6 @@
         <jena.version>4.2.0</jena.version>
         <jsr305.version>3.0.2</jsr305.version>
         <maven-checkstyle-plugin.version>3.1.1</maven-checkstyle-plugin.version>
-        <maven-dependency-check-plugin.version>6.4.1</maven-dependency-check-plugin.version>
         <maven-jacoco-plugin.version>0.8.8</maven-jacoco-plugin.version>
         <minio.version>8.3.1</minio.version>
         <okhttp.version>4.9.2</okhttp.version>
@@ -283,11 +282,6 @@
                         </goals>
                     </execution>
                 </executions>
-            </plugin>
-            <plugin>
-                <groupId>org.owasp</groupId>
-                <artifactId>dependency-check-maven</artifactId>
-                <version>${maven-dependency-check-plugin.version}</version>
             </plugin>
             <plugin>
                 <groupId>org.springframework.boot</groupId>
