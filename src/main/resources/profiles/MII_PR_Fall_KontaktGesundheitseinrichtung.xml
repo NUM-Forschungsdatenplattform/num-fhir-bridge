@@ -1,31 +1,30 @@
 <StructureDefinition xmlns="http://hl7.org/fhir">
   <id value="mii-pr-fall-kontakt-gesundheitseinrichtung" />
   <url value="https://www.medizininformatik-initiative.de/fhir/core/modul-fall/StructureDefinition/KontaktGesundheitseinrichtung" />
-  <version value="2024.0.0-ballot" />
+  <version value="2024.1.0" />
   <name value="MII_PR_Fall_KontaktGesundheitseinrichtung" />
-  <title value="MII PR Fall Kontakt mit einer Gesundheitseinrichtung" />
+  <title value="MII PR Fall Kontakt mit einer Gesundheitseinrichtung">
+    <extension url="http://hl7.org/fhir/StructureDefinition/translation">
+      <extension url="lang">
+        <valueCode value="de-DE" />
+      </extension>
+      <extension url="content">
+        <valueString value="Fall - Kontakt mit einer Gesundheitseinrichtung" />
+      </extension>
+    </extension>
+    <extension url="http://hl7.org/fhir/StructureDefinition/translation">
+      <extension url="lang">
+        <valueCode value="en-US" />
+      </extension>
+      <extension url="content">
+        <valueString value="Treatment case - Encounter with Health Care Facility" />
+      </extension>
+    </extension>
+  </title>
   <status value="active" />
+  <date value="2024-10-01" />
+  <description value="Kontakt zu einer Einrichtung, Abteilung oder Versorgungsstelle" />
   <fhirVersion value="4.0.1" />
-  <mapping>
-    <identity value="workflow" />
-    <uri value="http://hl7.org/fhir/workflow" />
-    <name value="Workflow Pattern" />
-  </mapping>
-  <mapping>
-    <identity value="rim" />
-    <uri value="http://hl7.org/v3" />
-    <name value="RIM Mapping" />
-  </mapping>
-  <mapping>
-    <identity value="w5" />
-    <uri value="http://hl7.org/fhir/fivews" />
-    <name value="FiveWs Pattern Mapping" />
-  </mapping>
-  <mapping>
-    <identity value="v2" />
-    <uri value="http://hl7.org/v2" />
-    <name value="HL7 v2 Mapping" />
-  </mapping>
   <kind value="resource" />
   <abstract value="false" />
   <type value="Encounter" />
@@ -93,8 +92,50 @@
       <constraint>
         <key value="mii-enc-1" />
         <severity value="error" />
-        <human value="Falls der Encounter abgeschlossen wurde muss ein Enddatum bekannt sein" />
+        <human value="Falls der Encounter abgeschlossen wurde, MUSS ein Enddatum bekannt sein" />
         <expression value="status = 'finished' implies period.end.exists()" />
+        <source value="https://www.medizininformatik-initiative.de/fhir/core/modul-fall/StructureDefinition/KontaktGesundheitseinrichtung" />
+      </constraint>
+      <constraint>
+        <key value="mii-enc-2" />
+        <severity value="error" />
+        <human value="Abgeschlossene, stationäre Kontakte MÜSSEN einen Start- und End-Zeitpunkt angeben" />
+        <expression value="status = 'finished' and class = 'IMP' implies period.start.exists() and period.end.exists()" />
+        <source value="https://www.medizininformatik-initiative.de/fhir/core/modul-fall/StructureDefinition/KontaktGesundheitseinrichtung" />
+      </constraint>
+      <constraint>
+        <key value="mii-enc-3" />
+        <severity value="error" />
+        <human value="Geplante Kontakte DÜRFEN NICHT einen Start- oder End-Zeitpunkt angeben" />
+        <expression value="status = 'planned' implies period.exists().not()" />
+        <source value="https://www.medizininformatik-initiative.de/fhir/core/modul-fall/StructureDefinition/KontaktGesundheitseinrichtung" />
+      </constraint>
+      <constraint>
+        <key value="mii-enc-4" />
+        <severity value="warning" />
+        <human value="Geplante Kontakte SOLLTEN die Extensions für den geplanten Start- oder End-Zeitpunkt verwenden" />
+        <expression value="status = 'planned' implies extension.where(url = 'http://hl7.org/fhir/5.0/StructureDefinition/extension-Encounter.plannedStartDate').exists()" />
+        <source value="https://www.medizininformatik-initiative.de/fhir/core/modul-fall/StructureDefinition/KontaktGesundheitseinrichtung" />
+      </constraint>
+      <constraint>
+        <key value="mii-enc-5" />
+        <severity value="error" />
+        <human value="In-Durchführung befindliche Kontakte MÜSSEN einen Start-Zeitpunkt angeben" />
+        <expression value="status = 'in-progress' implies period.start.exists()" />
+        <source value="https://www.medizininformatik-initiative.de/fhir/core/modul-fall/StructureDefinition/KontaktGesundheitseinrichtung" />
+      </constraint>
+      <constraint>
+        <key value="mii-enc-6" />
+        <severity value="error" />
+        <human value="Kontakte mit Abwesenheitsstatus MÜSSEN einen Start-Zeitpunkt angeben" />
+        <expression value="status = 'onleave' implies period.start.exists()" />
+        <source value="https://www.medizininformatik-initiative.de/fhir/core/modul-fall/StructureDefinition/KontaktGesundheitseinrichtung" />
+      </constraint>
+      <constraint>
+        <key value="mii-enc-7" />
+        <severity value="warning" />
+        <human value="Kontakte mit unbekannten Status SOLLTEN einen Start-Zeitpunkt angeben" />
+        <expression value="status = 'unknown' implies period.start.exists()" />
         <source value="https://www.medizininformatik-initiative.de/fhir/core/modul-fall/StructureDefinition/KontaktGesundheitseinrichtung" />
       </constraint>
       <mapping>
@@ -113,7 +154,7 @@
     <element id="Encounter.id">
       <path value="Encounter.id" />
       <short value="Logical id of this artifact" />
-      <definition value="The logical id of the resource, as used in the URL for the resource. Once assigned, this value never changes." />
+      <definition value="Angabe OPTIONAL, vom Server automatisch vergebene system-abhängige ID" />
       <comment value="The only time that a resource does not have an id is when it is being submitted to the server using a create operation." />
       <min value="0" />
       <max value="1" />
@@ -140,7 +181,7 @@
       </extension>
       <path value="Encounter.meta" />
       <short value="Metadata about the resource" />
-      <definition value="The metadata about the resource. This is content that is maintained by the infrastructure. Changes to the content might not always be associated with version changes to the resource." />
+      <definition value="Angabe OPTIONAL zur Provenance und zum Profil" />
       <min value="0" />
       <max value="1" />
       <base>
@@ -704,8 +745,42 @@
       </extension>
       <path value="Encounter.extension" />
       <sliceName value="Aufnahmegrund" />
-      <short value="Optional Extensions Element" />
-      <definition value="Optional Extension Element - found in all resources." />
+      <short value="Aufnahmegrund">
+        <extension url="http://hl7.org/fhir/StructureDefinition/translation">
+          <extension url="lang">
+            <valueCode value="de-DE" />
+          </extension>
+          <extension url="content">
+            <valueString value="Aufnahmegrund" />
+          </extension>
+        </extension>
+        <extension url="http://hl7.org/fhir/StructureDefinition/translation">
+          <extension url="lang">
+            <valueCode value="en-US" />
+          </extension>
+          <extension url="content">
+            <valueString value="Admission reason" />
+          </extension>
+        </extension>
+      </short>
+      <definition value="OPTIONAL, Aufnahmegrund entsprechend Schlüssel 1 der Anlage 2 der Datenübermittlung nach § 301 Abs. 3 SGB V">
+        <extension url="http://hl7.org/fhir/StructureDefinition/translation">
+          <extension url="lang">
+            <valueCode value="de-DE" />
+          </extension>
+          <extension url="content">
+            <valueString value="Aufnahmegrund nach Schlüssel 1, Anlage 2, Datenübermittlung nach § 301 Abs. 3 SGB V" />
+          </extension>
+        </extension>
+        <extension url="http://hl7.org/fhir/StructureDefinition/translation">
+          <extension url="lang">
+            <valueCode value="en-US" />
+          </extension>
+          <extension url="content">
+            <valueString value="Admission reason according to key 1, appendix 2, data transmission according to § 301 para. 3 SGB V" />
+          </extension>
+        </extension>
+      </definition>
       <comment value="There can be no stigma associated with the use of extensions by any application, project, or standard - regardless of the institution or jurisdiction that uses or defines the extensions.  The use of extensions is what allows the FHIR specification to retain a core level of simplicity for everyone." />
       <alias value="extensions" />
       <alias value="user content" />
@@ -836,8 +911,42 @@
       </extension>
       <path value="Encounter.extension.extension" />
       <sliceName value="ErsteUndZweiteStelle" />
-      <short value="Additional content defined by implementations" />
-      <definition value="May be used to represent additional information that is not part of the basic definition of the element. To make the use of extensions safe and manageable, there is a strict set of governance  applied to the definition and use of extensions. Though any implementer can define an extension, there is a set of requirements that SHALL be met as part of the definition of the extension." />
+      <short>
+        <extension url="http://hl7.org/fhir/StructureDefinition/translation">
+          <extension url="lang">
+            <valueCode value="de-DE" />
+          </extension>
+          <extension url="content">
+            <valueString value="1. und 2. Stelle" />
+          </extension>
+        </extension>
+        <extension url="http://hl7.org/fhir/StructureDefinition/translation">
+          <extension url="lang">
+            <valueCode value="en-US" />
+          </extension>
+          <extension url="content">
+            <valueString value="1st and 2nd position" />
+          </extension>
+        </extension>
+      </short>
+      <definition value="OPTIONAL, Aufnahmegrund (1. und 2. Stelle), Datenübermittlung nach § 301 Abs. 3 SGB V.">
+        <extension url="http://hl7.org/fhir/StructureDefinition/translation">
+          <extension url="lang">
+            <valueCode value="de-DE" />
+          </extension>
+          <extension url="content">
+            <valueString value="Aufnahmegrund 1. und 2. Stelle" />
+          </extension>
+        </extension>
+        <extension url="http://hl7.org/fhir/StructureDefinition/translation">
+          <extension url="lang">
+            <valueCode value="en-US" />
+          </extension>
+          <extension url="content">
+            <valueString value="Admission reason 1st and 2nd position" />
+          </extension>
+        </extension>
+      </definition>
       <comment value="There can be no stigma associated with the use of extensions by any application, project, or standard - regardless of the institution or jurisdiction that uses or defines the extensions.  The use of extensions is what allows the FHIR specification to retain a core level of simplicity for everyone." />
       <alias value="extensions" />
       <alias value="user content" />
@@ -1034,8 +1143,42 @@
       </extension>
       <path value="Encounter.extension.extension" />
       <sliceName value="DritteStelle" />
-      <short value="Additional content defined by implementations" />
-      <definition value="May be used to represent additional information that is not part of the basic definition of the element. To make the use of extensions safe and manageable, there is a strict set of governance  applied to the definition and use of extensions. Though any implementer can define an extension, there is a set of requirements that SHALL be met as part of the definition of the extension." />
+      <short>
+        <extension url="http://hl7.org/fhir/StructureDefinition/translation">
+          <extension url="lang">
+            <valueCode value="de-DE" />
+          </extension>
+          <extension url="content">
+            <valueString value="3. Stelle" />
+          </extension>
+        </extension>
+        <extension url="http://hl7.org/fhir/StructureDefinition/translation">
+          <extension url="lang">
+            <valueCode value="en-US" />
+          </extension>
+          <extension url="content">
+            <valueString value="3rd position" />
+          </extension>
+        </extension>
+      </short>
+      <definition value="OPTIONAL, Aufnahmegrund (3. Stelle), Datenübermittlung nach § 301 Abs. 3 SGB V.">
+        <extension url="http://hl7.org/fhir/StructureDefinition/translation">
+          <extension url="lang">
+            <valueCode value="de-DE" />
+          </extension>
+          <extension url="content">
+            <valueString value="Aufnahmegrund 3. Stelle" />
+          </extension>
+        </extension>
+        <extension url="http://hl7.org/fhir/StructureDefinition/translation">
+          <extension url="lang">
+            <valueCode value="en-US" />
+          </extension>
+          <extension url="content">
+            <valueString value="Admission reason 3rd position" />
+          </extension>
+        </extension>
+      </definition>
       <comment value="There can be no stigma associated with the use of extensions by any application, project, or standard - regardless of the institution or jurisdiction that uses or defines the extensions.  The use of extensions is what allows the FHIR specification to retain a core level of simplicity for everyone." />
       <alias value="extensions" />
       <alias value="user content" />
@@ -1232,8 +1375,42 @@
       </extension>
       <path value="Encounter.extension.extension" />
       <sliceName value="VierteStelle" />
-      <short value="Additional content defined by implementations" />
-      <definition value="May be used to represent additional information that is not part of the basic definition of the element. To make the use of extensions safe and manageable, there is a strict set of governance  applied to the definition and use of extensions. Though any implementer can define an extension, there is a set of requirements that SHALL be met as part of the definition of the extension." />
+      <short>
+        <extension url="http://hl7.org/fhir/StructureDefinition/translation">
+          <extension url="lang">
+            <valueCode value="de-DE" />
+          </extension>
+          <extension url="content">
+            <valueString value="4. Stelle" />
+          </extension>
+        </extension>
+        <extension url="http://hl7.org/fhir/StructureDefinition/translation">
+          <extension url="lang">
+            <valueCode value="en-US" />
+          </extension>
+          <extension url="content">
+            <valueString value="4th position" />
+          </extension>
+        </extension>
+      </short>
+      <definition value="OPTIONAL, Aufnahmegrund (4. Stelle), Datenübermittlung nach § 301 Abs. 3 SGB V.">
+        <extension url="http://hl7.org/fhir/StructureDefinition/translation">
+          <extension url="lang">
+            <valueCode value="de-DE" />
+          </extension>
+          <extension url="content">
+            <valueString value="Aufnahmegrund 4. Stelle" />
+          </extension>
+        </extension>
+        <extension url="http://hl7.org/fhir/StructureDefinition/translation">
+          <extension url="lang">
+            <valueCode value="en-US" />
+          </extension>
+          <extension url="content">
+            <valueString value="Admission reason 4th position" />
+          </extension>
+        </extension>
+      </definition>
       <comment value="There can be no stigma associated with the use of extensions by any application, project, or standard - regardless of the institution or jurisdiction that uses or defines the extensions.  The use of extensions is what allows the FHIR specification to retain a core level of simplicity for everyone." />
       <alias value="extensions" />
       <alias value="user content" />
@@ -1631,6 +1808,108 @@
         <map value="N/A" />
       </mapping>
     </element>
+    <element id="Encounter.extension:plannedStartDate">
+      <extension url="http://hl7.org/fhir/StructureDefinition/structuredefinition-standards-status">
+        <valueCode value="normative" />
+      </extension>
+      <extension url="http://hl7.org/fhir/StructureDefinition/structuredefinition-normative-version">
+        <valueCode value="4.0.0" />
+      </extension>
+      <path value="Encounter.extension" />
+      <sliceName value="plannedStartDate" />
+      <short value="Optional Extensions Element" />
+      <definition value="Optional Extension Element - found in all resources." />
+      <comment value="There can be no stigma associated with the use of extensions by any application, project, or standard - regardless of the institution or jurisdiction that uses or defines the extensions.  The use of extensions is what allows the FHIR specification to retain a core level of simplicity for everyone." />
+      <alias value="extensions" />
+      <alias value="user content" />
+      <min value="0" />
+      <max value="1" />
+      <base>
+        <path value="DomainResource.extension" />
+        <min value="0" />
+        <max value="*" />
+      </base>
+      <type>
+        <code value="Extension" />
+        <profile value="http://hl7.org/fhir/5.0/StructureDefinition/extension-Encounter.plannedStartDate" />
+      </type>
+      <condition value="ele-1" />
+      <constraint>
+        <key value="ele-1" />
+        <severity value="error" />
+        <human value="All FHIR elements must have a @value or children" />
+        <expression value="hasValue() or (children().count() &gt; id.count())" />
+        <xpath value="@value|f:*|h:div" />
+        <source value="http://hl7.org/fhir/StructureDefinition/Element" />
+      </constraint>
+      <constraint>
+        <key value="ext-1" />
+        <severity value="error" />
+        <human value="Must have either extensions or value[x], not both" />
+        <expression value="extension.exists() != value.exists()" />
+        <xpath value="exists(f:extension)!=exists(f:*[starts-with(local-name(.), 'value')])" />
+        <source value="http://hl7.org/fhir/StructureDefinition/Extension" />
+      </constraint>
+      <mapping>
+        <identity value="rim" />
+        <map value="n/a" />
+      </mapping>
+      <mapping>
+        <identity value="rim" />
+        <map value="N/A" />
+      </mapping>
+    </element>
+    <element id="Encounter.extension:plannedEndDate">
+      <extension url="http://hl7.org/fhir/StructureDefinition/structuredefinition-standards-status">
+        <valueCode value="normative" />
+      </extension>
+      <extension url="http://hl7.org/fhir/StructureDefinition/structuredefinition-normative-version">
+        <valueCode value="4.0.0" />
+      </extension>
+      <path value="Encounter.extension" />
+      <sliceName value="plannedEndDate" />
+      <short value="Optional Extensions Element" />
+      <definition value="Optional Extension Element - found in all resources." />
+      <comment value="There can be no stigma associated with the use of extensions by any application, project, or standard - regardless of the institution or jurisdiction that uses or defines the extensions.  The use of extensions is what allows the FHIR specification to retain a core level of simplicity for everyone." />
+      <alias value="extensions" />
+      <alias value="user content" />
+      <min value="0" />
+      <max value="1" />
+      <base>
+        <path value="DomainResource.extension" />
+        <min value="0" />
+        <max value="*" />
+      </base>
+      <type>
+        <code value="Extension" />
+        <profile value="http://hl7.org/fhir/5.0/StructureDefinition/extension-Encounter.plannedEndDate" />
+      </type>
+      <condition value="ele-1" />
+      <constraint>
+        <key value="ele-1" />
+        <severity value="error" />
+        <human value="All FHIR elements must have a @value or children" />
+        <expression value="hasValue() or (children().count() &gt; id.count())" />
+        <xpath value="@value|f:*|h:div" />
+        <source value="http://hl7.org/fhir/StructureDefinition/Element" />
+      </constraint>
+      <constraint>
+        <key value="ext-1" />
+        <severity value="error" />
+        <human value="Must have either extensions or value[x], not both" />
+        <expression value="extension.exists() != value.exists()" />
+        <xpath value="exists(f:extension)!=exists(f:*[starts-with(local-name(.), 'value')])" />
+        <source value="http://hl7.org/fhir/StructureDefinition/Extension" />
+      </constraint>
+      <mapping>
+        <identity value="rim" />
+        <map value="n/a" />
+      </mapping>
+      <mapping>
+        <identity value="rim" />
+        <map value="N/A" />
+      </mapping>
+    </element>
     <element id="Encounter.modifierExtension">
       <extension url="http://hl7.org/fhir/StructureDefinition/structuredefinition-standards-status">
         <valueCode value="normative" />
@@ -1706,8 +1985,42 @@
         </discriminator>
         <rules value="open" />
       </slicing>
-      <short value="Identifier(s) by which this encounter is known" />
-      <definition value="Identifier(s) by which this encounter is known." />
+      <short>
+        <extension url="http://hl7.org/fhir/StructureDefinition/translation">
+          <extension url="lang">
+            <valueCode value="de-DE" />
+          </extension>
+          <extension url="content">
+            <valueString value="Identifikator" />
+          </extension>
+        </extension>
+        <extension url="http://hl7.org/fhir/StructureDefinition/translation">
+          <extension url="lang">
+            <valueCode value="en-US" />
+          </extension>
+          <extension url="content">
+            <valueString value="Identifier" />
+          </extension>
+        </extension>
+      </short>
+      <definition>
+        <extension url="http://hl7.org/fhir/StructureDefinition/translation">
+          <extension url="lang">
+            <valueCode value="de-DE" />
+          </extension>
+          <extension url="content">
+            <valueString value="Kennung/en, unter der/denen dieser Kontakt bekannt ist." />
+          </extension>
+        </extension>
+        <extension url="http://hl7.org/fhir/StructureDefinition/translation">
+          <extension url="lang">
+            <valueCode value="en-US" />
+          </extension>
+          <extension url="content">
+            <valueString value="Identifier/s by which this encounter is known." />
+          </extension>
+        </extension>
+      </definition>
       <min value="0" />
       <max value="*" />
       <base>
@@ -1771,8 +2084,42 @@
       </extension>
       <path value="Encounter.identifier" />
       <sliceName value="Aufnahmenummer" />
-      <short value="Identifier(s) by which this encounter is known" />
-      <definition value="Identifier(s) by which this encounter is known." />
+      <short value="Aufnahmenummer">
+        <extension url="http://hl7.org/fhir/StructureDefinition/translation">
+          <extension url="lang">
+            <valueCode value="de-DE" />
+          </extension>
+          <extension url="content">
+            <valueString value="Aufnahmenummer" />
+          </extension>
+        </extension>
+        <extension url="http://hl7.org/fhir/StructureDefinition/translation">
+          <extension url="lang">
+            <valueCode value="en-US" />
+          </extension>
+          <extension url="content">
+            <valueString value="Admission number" />
+          </extension>
+        </extension>
+      </short>
+      <definition value="OPTIONAL, Aufnahmenummer/Fallnummer, die Patient:innen bei der Planung einer Aufnahme oder bei der Aufnahme selbst bekommt. &#xA;Generell SOLLTE die Aufnahmenummer in allen Encounter-Ressourcen unabhängig von der Kontaktebene und dem Kontakttyp angegeben werden. &#xA;Als Gründe würden dagegen sprechen, wenn die Aufnahmenummer nur in einem Encounter der Encounter-Hierarchie angegeben werden kann. &#xA;In diesem Fall SOLL auf die korrekte Encounter-Verlinkung über .partOf geachtet werden, &#xA;sowie dass jeder Encounter einen eigenständigen Identifier mit unterschiedlichen Systemen enthält.">
+        <extension url="http://hl7.org/fhir/StructureDefinition/translation">
+          <extension url="lang">
+            <valueCode value="de-DE" />
+          </extension>
+          <extension url="content">
+            <valueString value="Aufnahmenummer/Fallnummer, die Patient:in bei einer Aufnahme bekommt." />
+          </extension>
+        </extension>
+        <extension url="http://hl7.org/fhir/StructureDefinition/translation">
+          <extension url="lang">
+            <valueCode value="en-US" />
+          </extension>
+          <extension url="content">
+            <valueString value="Admission number, the patient receives during an admission." />
+          </extension>
+        </extension>
+      </definition>
       <min value="0" />
       <max value="1" />
       <base>
@@ -2821,8 +3168,42 @@
     </element>
     <element id="Encounter.status">
       <path value="Encounter.status" />
-      <short value="planned | arrived | triaged | in-progress | onleave | finished | cancelled +" />
-      <definition value="planned | arrived | triaged | in-progress | onleave | finished | cancelled +." />
+      <short>
+        <extension url="http://hl7.org/fhir/StructureDefinition/translation">
+          <extension url="lang">
+            <valueCode value="de-DE" />
+          </extension>
+          <extension url="content">
+            <valueString value="Status" />
+          </extension>
+        </extension>
+        <extension url="http://hl7.org/fhir/StructureDefinition/translation">
+          <extension url="lang">
+            <valueCode value="en-US" />
+          </extension>
+          <extension url="content">
+            <valueString value="status" />
+          </extension>
+        </extension>
+      </short>
+      <definition value="VERPFLICHTEND, required Binding auf http://fhir.de/ValueSet/EncounterStatusDe">
+        <extension url="http://hl7.org/fhir/StructureDefinition/translation">
+          <extension url="lang">
+            <valueCode value="de-DE" />
+          </extension>
+          <extension url="content">
+            <valueString value="geplant | im Gange | beurlaubt | abgeschlossen | abgebrochen | fehlerhafte Eingabe | unbekannt" />
+          </extension>
+        </extension>
+        <extension url="http://hl7.org/fhir/StructureDefinition/translation">
+          <extension url="lang">
+            <valueCode value="en-US" />
+          </extension>
+          <extension url="content">
+            <valueString value="planned | in-progress | onleave | finished | cancelled | entered-in-error | unknown" />
+          </extension>
+        </extension>
+      </definition>
       <comment value="Note that internal business rules will determine the appropriate transitions that may occur between statuses (and also classes)." />
       <min value="1" />
       <max value="1" />
@@ -3144,8 +3525,42 @@
         <valueCode value="4.0.0" />
       </extension>
       <path value="Encounter.class" />
-      <short value="Classification of patient encounter" />
-      <definition value="Concepts representing classification of patient encounter such as ambulatory (outpatient), inpatient, emergency, home health or others due to local variations." />
+      <short value="Kontaktklasse">
+        <extension url="http://hl7.org/fhir/StructureDefinition/translation">
+          <extension url="lang">
+            <valueCode value="de-DE" />
+          </extension>
+          <extension url="content">
+            <valueString value="Kontaktklasse" />
+          </extension>
+        </extension>
+        <extension url="http://hl7.org/fhir/StructureDefinition/translation">
+          <extension url="lang">
+            <valueCode value="en-US" />
+          </extension>
+          <extension url="content">
+            <valueString value="Classification of patient encounter" />
+          </extension>
+        </extension>
+      </short>
+      <definition value="VERPFLICHTEND, Kontaktklasse. Required Binding auf http://fhir.de/ValueSet/EncounterClassDE. &#xA;Klassifizierung des Kontaktes in stationär, ambulant, teilstationär oder andere.">
+        <extension url="http://hl7.org/fhir/StructureDefinition/translation">
+          <extension url="lang">
+            <valueCode value="de-DE" />
+          </extension>
+          <extension url="content">
+            <valueString value="ambulant, stationär, vorstationär, virtuell, teilstationär, häusliche Pflege" />
+          </extension>
+        </extension>
+        <extension url="http://hl7.org/fhir/StructureDefinition/translation">
+          <extension url="lang">
+            <valueCode value="en-US" />
+          </extension>
+          <extension url="content">
+            <valueString value="ambulatory, inpatient encounter, pre-admission, virtual, short stay, home health" />
+          </extension>
+        </extension>
+      </definition>
       <comment value="Codes may be defined very casually in enumerations or code lists, up to very formal definitions such as SNOMED CT - see the HL7 v3 Core Principles for more information." />
       <min value="1" />
       <max value="1" />
@@ -3497,8 +3912,42 @@
         </discriminator>
         <rules value="open" />
       </slicing>
-      <short value="Specific type of encounter" />
-      <definition value="Specific type of encounter (e.g. e-mail consultation, surgical day-care, skilled nursing, rehabilitation)." />
+      <short>
+        <extension url="http://hl7.org/fhir/StructureDefinition/translation">
+          <extension url="lang">
+            <valueCode value="de-DE" />
+          </extension>
+          <extension url="content">
+            <valueString value="Typ des Kontaktes" />
+          </extension>
+        </extension>
+        <extension url="http://hl7.org/fhir/StructureDefinition/translation">
+          <extension url="lang">
+            <valueCode value="en-US" />
+          </extension>
+          <extension url="content">
+            <valueString value="Type of encounter" />
+          </extension>
+        </extension>
+      </short>
+      <definition>
+        <extension url="http://hl7.org/fhir/StructureDefinition/translation">
+          <extension url="lang">
+            <valueCode value="de-DE" />
+          </extension>
+          <extension url="content">
+            <valueString value="Spezifischer Typ des Kontaktes" />
+          </extension>
+        </extension>
+        <extension url="http://hl7.org/fhir/StructureDefinition/translation">
+          <extension url="lang">
+            <valueCode value="en-US" />
+          </extension>
+          <extension url="content">
+            <valueString value="Specific type of encounter" />
+          </extension>
+        </extension>
+      </definition>
       <comment value="Since there are many ways to further classify encounters, this element is 0..*." />
       <min value="0" />
       <max value="*" />
@@ -3571,8 +4020,42 @@
       </extension>
       <path value="Encounter.type" />
       <sliceName value="Kontaktebene" />
-      <short value="Specific type of encounter" />
-      <definition value="Specific type of encounter (e.g. e-mail consultation, surgical day-care, skilled nursing, rehabilitation)." />
+      <short value="Kontaktebene">
+        <extension url="http://hl7.org/fhir/StructureDefinition/translation">
+          <extension url="lang">
+            <valueCode value="de-DE" />
+          </extension>
+          <extension url="content">
+            <valueString value="Kontaktebene" />
+          </extension>
+        </extension>
+        <extension url="http://hl7.org/fhir/StructureDefinition/translation">
+          <extension url="lang">
+            <valueCode value="en-US" />
+          </extension>
+          <extension url="content">
+            <valueString value="Level of encounter" />
+          </extension>
+        </extension>
+      </short>
+      <definition value="OPTIONAL, Unterscheidung der Kontakt-Hierarchieebenen Einrichtungskontakt, Abteilungskontakt, Versorgungsstellenkontakt. &#xA;Die Gliederung gilt für stationäre Kontakte. Required Binding auf http://fhir.de/ValueSet/kontaktebene-de">
+        <extension url="http://hl7.org/fhir/StructureDefinition/translation">
+          <extension url="lang">
+            <valueCode value="de-DE" />
+          </extension>
+          <extension url="content">
+            <valueString value="Unterscheidung der Kontakt-Hierarchieebenen: Einrichtungskontakt | Abteilungskontakt | Versorgungsstellenkontakt" />
+          </extension>
+        </extension>
+        <extension url="http://hl7.org/fhir/StructureDefinition/translation">
+          <extension url="lang">
+            <valueCode value="en-US" />
+          </extension>
+          <extension url="content">
+            <valueString value="Differentiation of the encounter hierarchy levels: facility contact | department contact | care provider contact" />
+          </extension>
+        </extension>
+      </definition>
       <comment value="Since there are many ways to further classify encounters, this element is 0..*." />
       <min value="0" />
       <max value="1" />
@@ -3650,8 +4133,42 @@
       </extension>
       <path value="Encounter.type" />
       <sliceName value="KontaktArt" />
-      <short value="Specific type of encounter" />
-      <definition value="Specific type of encounter (e.g. e-mail consultation, surgical day-care, skilled nursing, rehabilitation)." />
+      <short value="Kontaktart">
+        <extension url="http://hl7.org/fhir/StructureDefinition/translation">
+          <extension url="lang">
+            <valueCode value="de-DE" />
+          </extension>
+          <extension url="content">
+            <valueString value="Kontaktart" />
+          </extension>
+        </extension>
+        <extension url="http://hl7.org/fhir/StructureDefinition/translation">
+          <extension url="lang">
+            <valueCode value="en-US" />
+          </extension>
+          <extension url="content">
+            <valueString value="Type of encounter" />
+          </extension>
+        </extension>
+      </short>
+      <definition value="OPTIONAL, Differenzierung zwischen verschiedenen Arten von Kontakten (z.B. vorstationär, nachstationär, intensivstationär). &#xA;Required Binding auf http://fhir.de/ValueSet/kontaktart-de">
+        <extension url="http://hl7.org/fhir/StructureDefinition/translation">
+          <extension url="lang">
+            <valueCode value="de-DE" />
+          </extension>
+          <extension url="content">
+            <valueString value="Kontaktarten wie vorstationär | nachstationär | intensivstationär" />
+          </extension>
+        </extension>
+        <extension url="http://hl7.org/fhir/StructureDefinition/translation">
+          <extension url="lang">
+            <valueCode value="en-US" />
+          </extension>
+          <extension url="content">
+            <valueString value="Type of encounter such as pre-admission | post-admission | intensive care" />
+          </extension>
+        </extension>
+      </definition>
       <comment value="Since there are many ways to further classify encounters, this element is 0..*." />
       <min value="0" />
       <max value="1" />
@@ -3728,8 +4245,42 @@
         <valueCode value="4.0.0" />
       </extension>
       <path value="Encounter.serviceType" />
-      <short value="Specific type of service" />
-      <definition value="Broad categorization of the service that is to be provided (e.g. cardiology)." />
+      <short value="Fachabteilung">
+        <extension url="http://hl7.org/fhir/StructureDefinition/translation">
+          <extension url="lang">
+            <valueCode value="de-DE" />
+          </extension>
+          <extension url="content">
+            <valueString value="Fachabteilung" />
+          </extension>
+        </extension>
+        <extension url="http://hl7.org/fhir/StructureDefinition/translation">
+          <extension url="lang">
+            <valueCode value="en-US" />
+          </extension>
+          <extension url="content">
+            <valueString value="Department" />
+          </extension>
+        </extension>
+      </short>
+      <definition value="Die Fachdisziplin bzw. Fachabteilung wird durch einen vierstelligen Fachabteilungsschlüssel klassifiziert.">
+        <extension url="http://hl7.org/fhir/StructureDefinition/translation">
+          <extension url="lang">
+            <valueCode value="de-DE" />
+          </extension>
+          <extension url="content">
+            <valueString value="Fachabteilung Klassifizierung durch Fachabteilungsschlüssel" />
+          </extension>
+        </extension>
+        <extension url="http://hl7.org/fhir/StructureDefinition/translation">
+          <extension url="lang">
+            <valueCode value="en-US" />
+          </extension>
+          <extension url="content">
+            <valueString value="Department classification by department key" />
+          </extension>
+        </extension>
+      </definition>
       <comment value="Not all terminology uses fit this general pattern. In some cases, models should not use CodeableConcept and use Coding directly and provide their own structure for managing text, codings, translations and the relationship between elements and pre- and post-coordination." />
       <min value="0" />
       <max value="1" />
@@ -3943,8 +4494,8 @@
       </extension>
       <path value="Encounter.serviceType.coding" />
       <sliceName value="Fachabteilungsschluessel" />
-      <short value="Code defined by a terminology system" />
-      <definition value="A reference to a code defined by a terminology system." />
+      <short value="Fachabteilungsschlüssel" />
+      <definition value="OPTIONAL, required Binding auf http://fhir.de/ValueSet/dkgev/Fachabteilungsschluessel&#xA;Fachabteilungen gemäß Anhang 1 der BPflV in der am 31.12.2003 geltenden Fassung" />
       <comment value="Codes may be defined very casually in enumerations, or code lists, up to very formal definitions such as SNOMED CT - see the HL7 v3 Core Principles for more information.  Ordering of codings is undefined and SHALL NOT be used to infer meaning. Generally, at most only one of the coding values will be labeled as UserSelected = true." />
       <requirements value="Allows for alternative encodings within a code system, and translations to other code systems." />
       <min value="0" />
@@ -3972,7 +4523,7 @@
       <mustSupport value="true" />
       <isSummary value="true" />
       <binding>
-        <strength value="extensible" />
+        <strength value="required" />
         <valueSet value="http://fhir.de/ValueSet/dkgev/Fachabteilungsschluessel" />
       </binding>
       <mapping>
@@ -4303,6 +4854,375 @@
         <map value="fhir:Coding.userSelected fhir:mapsTo dt:CDCoding.codingRationale. fhir:Coding.userSelected fhir:hasMap fhir:Coding.userSelected.map. fhir:Coding.userSelected.map a fhir:Map;   fhir:target dt:CDCoding.codingRationale. fhir:Coding.userSelected\#true a [     fhir:source &quot;true&quot;;     fhir:target dt:CDCoding.codingRationale\#O   ]" />
       </mapping>
     </element>
+    <element id="Encounter.serviceType.coding:ErweiterterFachabteilungsschluessel">
+      <extension url="http://hl7.org/fhir/StructureDefinition/structuredefinition-standards-status">
+        <valueCode value="normative" />
+      </extension>
+      <extension url="http://hl7.org/fhir/StructureDefinition/structuredefinition-normative-version">
+        <valueCode value="4.0.0" />
+      </extension>
+      <path value="Encounter.serviceType.coding" />
+      <sliceName value="ErweiterterFachabteilungsschluessel" />
+      <short value="Erweiterter Fachabteilungsschlüssel" />
+      <definition value="OPTIONAL, required Binding auf http://fhir.de/ValueSet/dkgev/Fachabteilungsschluessel-erweitert&#xA;Fachabteilungen gemäß Anhang 1 der BPflV in der am 31.12.2003 geltenden Fassung inkl. Spezialisierungen." />
+      <comment value="Codes may be defined very casually in enumerations, or code lists, up to very formal definitions such as SNOMED CT - see the HL7 v3 Core Principles for more information.  Ordering of codings is undefined and SHALL NOT be used to infer meaning. Generally, at most only one of the coding values will be labeled as UserSelected = true." />
+      <requirements value="Allows for alternative encodings within a code system, and translations to other code systems." />
+      <min value="0" />
+      <max value="1" />
+      <base>
+        <path value="CodeableConcept.coding" />
+        <min value="0" />
+        <max value="*" />
+      </base>
+      <type>
+        <code value="Coding" />
+      </type>
+      <patternCoding>
+        <system value="http://fhir.de/CodeSystem/dkgev/Fachabteilungsschluessel-erweitert" />
+      </patternCoding>
+      <condition value="ele-1" />
+      <constraint>
+        <key value="ele-1" />
+        <severity value="error" />
+        <human value="All FHIR elements must have a @value or children" />
+        <expression value="hasValue() or (children().count() &gt; id.count())" />
+        <xpath value="@value|f:*|h:div" />
+        <source value="http://hl7.org/fhir/StructureDefinition/Element" />
+      </constraint>
+      <mustSupport value="true" />
+      <isSummary value="true" />
+      <binding>
+        <strength value="required" />
+        <valueSet value="http://fhir.de/ValueSet/dkgev/Fachabteilungsschluessel-erweitert" />
+      </binding>
+      <mapping>
+        <identity value="rim" />
+        <map value="n/a" />
+      </mapping>
+      <mapping>
+        <identity value="v2" />
+        <map value="CE/CNE/CWE subset one of the sets of component 1-3 or 4-6" />
+      </mapping>
+      <mapping>
+        <identity value="rim" />
+        <map value="CV" />
+      </mapping>
+      <mapping>
+        <identity value="orim" />
+        <map value="fhir:Coding rdfs:subClassOf dt:CDCoding" />
+      </mapping>
+      <mapping>
+        <identity value="v2" />
+        <map value="C*E.1-8, C*E.10-22" />
+      </mapping>
+      <mapping>
+        <identity value="rim" />
+        <map value="union(., ./translation)" />
+      </mapping>
+      <mapping>
+        <identity value="orim" />
+        <map value="fhir:CodeableConcept.coding rdfs:subPropertyOf dt:CD.coding" />
+      </mapping>
+    </element>
+    <element id="Encounter.serviceType.coding:ErweiterterFachabteilungsschluessel.id">
+      <path value="Encounter.serviceType.coding.id" />
+      <representation value="xmlAttr" />
+      <short value="Unique id for inter-element referencing" />
+      <definition value="Unique id for the element within a resource (for internal references). This may be any string value that does not contain spaces." />
+      <min value="0" />
+      <max value="1" />
+      <base>
+        <path value="Element.id" />
+        <min value="0" />
+        <max value="1" />
+      </base>
+      <type>
+        <extension url="http://hl7.org/fhir/StructureDefinition/structuredefinition-fhir-type">
+          <valueUrl value="string" />
+        </extension>
+        <code value="http://hl7.org/fhirpath/System.String" />
+      </type>
+      <mapping>
+        <identity value="rim" />
+        <map value="n/a" />
+      </mapping>
+    </element>
+    <element id="Encounter.serviceType.coding:ErweiterterFachabteilungsschluessel.extension">
+      <extension url="http://hl7.org/fhir/StructureDefinition/structuredefinition-standards-status">
+        <valueCode value="normative" />
+      </extension>
+      <extension url="http://hl7.org/fhir/StructureDefinition/structuredefinition-normative-version">
+        <valueCode value="4.0.0" />
+      </extension>
+      <path value="Encounter.serviceType.coding.extension" />
+      <slicing>
+        <discriminator>
+          <type value="value" />
+          <path value="url" />
+        </discriminator>
+        <description value="Extensions are always sliced by (at least) url" />
+        <rules value="open" />
+      </slicing>
+      <short value="Additional content defined by implementations" />
+      <definition value="May be used to represent additional information that is not part of the basic definition of the element. To make the use of extensions safe and manageable, there is a strict set of governance  applied to the definition and use of extensions. Though any implementer can define an extension, there is a set of requirements that SHALL be met as part of the definition of the extension." />
+      <comment value="There can be no stigma associated with the use of extensions by any application, project, or standard - regardless of the institution or jurisdiction that uses or defines the extensions.  The use of extensions is what allows the FHIR specification to retain a core level of simplicity for everyone." />
+      <alias value="extensions" />
+      <alias value="user content" />
+      <min value="0" />
+      <max value="*" />
+      <base>
+        <path value="Element.extension" />
+        <min value="0" />
+        <max value="*" />
+      </base>
+      <type>
+        <code value="Extension" />
+      </type>
+      <condition value="ele-1" />
+      <constraint>
+        <key value="ele-1" />
+        <severity value="error" />
+        <human value="All FHIR elements must have a @value or children" />
+        <expression value="hasValue() or (children().count() &gt; id.count())" />
+        <xpath value="@value|f:*|h:div" />
+        <source value="http://hl7.org/fhir/StructureDefinition/Element" />
+      </constraint>
+      <constraint>
+        <key value="ext-1" />
+        <severity value="error" />
+        <human value="Must have either extensions or value[x], not both" />
+        <expression value="extension.exists() != value.exists()" />
+        <xpath value="exists(f:extension)!=exists(f:*[starts-with(local-name(.), 'value')])" />
+        <source value="http://hl7.org/fhir/StructureDefinition/Extension" />
+      </constraint>
+      <mapping>
+        <identity value="rim" />
+        <map value="n/a" />
+      </mapping>
+      <mapping>
+        <identity value="rim" />
+        <map value="N/A" />
+      </mapping>
+    </element>
+    <element id="Encounter.serviceType.coding:ErweiterterFachabteilungsschluessel.system">
+      <path value="Encounter.serviceType.coding.system" />
+      <short value="Identity of the terminology system" />
+      <definition value="The identification of the code system that defines the meaning of the symbol in the code." />
+      <comment value="The URI may be an OID (urn:oid:...) or a UUID (urn:uuid:...).  OIDs and UUIDs SHALL be references to the HL7 OID registry. Otherwise, the URI should come from HL7's list of FHIR defined special URIs or it should reference to some definition that establishes the system clearly and unambiguously." />
+      <requirements value="Need to be unambiguous about the source of the definition of the symbol." />
+      <min value="1" />
+      <max value="1" />
+      <base>
+        <path value="Coding.system" />
+        <min value="0" />
+        <max value="1" />
+      </base>
+      <type>
+        <code value="uri" />
+      </type>
+      <condition value="ele-1" />
+      <constraint>
+        <key value="ele-1" />
+        <severity value="error" />
+        <human value="All FHIR elements must have a @value or children" />
+        <expression value="hasValue() or (children().count() &gt; id.count())" />
+        <xpath value="@value|f:*|h:div" />
+        <source value="http://hl7.org/fhir/StructureDefinition/Element" />
+      </constraint>
+      <mustSupport value="true" />
+      <isSummary value="true" />
+      <mapping>
+        <identity value="rim" />
+        <map value="n/a" />
+      </mapping>
+      <mapping>
+        <identity value="v2" />
+        <map value="C*E.3" />
+      </mapping>
+      <mapping>
+        <identity value="rim" />
+        <map value="./codeSystem" />
+      </mapping>
+      <mapping>
+        <identity value="orim" />
+        <map value="fhir:Coding.system rdfs:subPropertyOf dt:CDCoding.codeSystem" />
+      </mapping>
+    </element>
+    <element id="Encounter.serviceType.coding:ErweiterterFachabteilungsschluessel.version">
+      <path value="Encounter.serviceType.coding.version" />
+      <short value="Version of the system - if relevant" />
+      <definition value="The version of the code system which was used when choosing this code. Note that a well-maintained code system does not need the version reported, because the meaning of codes is consistent across versions. However this cannot consistently be assured, and when the meaning is not guaranteed to be consistent, the version SHOULD be exchanged." />
+      <comment value="Where the terminology does not clearly define what string should be used to identify code system versions, the recommendation is to use the date (expressed in FHIR date format) on which that version was officially published as the version date." />
+      <min value="0" />
+      <max value="1" />
+      <base>
+        <path value="Coding.version" />
+        <min value="0" />
+        <max value="1" />
+      </base>
+      <type>
+        <code value="string" />
+      </type>
+      <condition value="ele-1" />
+      <constraint>
+        <key value="ele-1" />
+        <severity value="error" />
+        <human value="All FHIR elements must have a @value or children" />
+        <expression value="hasValue() or (children().count() &gt; id.count())" />
+        <xpath value="@value|f:*|h:div" />
+        <source value="http://hl7.org/fhir/StructureDefinition/Element" />
+      </constraint>
+      <isSummary value="true" />
+      <mapping>
+        <identity value="rim" />
+        <map value="n/a" />
+      </mapping>
+      <mapping>
+        <identity value="v2" />
+        <map value="C*E.7" />
+      </mapping>
+      <mapping>
+        <identity value="rim" />
+        <map value="./codeSystemVersion" />
+      </mapping>
+      <mapping>
+        <identity value="orim" />
+        <map value="fhir:Coding.version rdfs:subPropertyOf dt:CDCoding.codeSystemVersion" />
+      </mapping>
+    </element>
+    <element id="Encounter.serviceType.coding:ErweiterterFachabteilungsschluessel.code">
+      <path value="Encounter.serviceType.coding.code" />
+      <short value="Symbol in syntax defined by the system" />
+      <definition value="A symbol in syntax defined by the system. The symbol may be a predefined code or an expression in a syntax defined by the coding system (e.g. post-coordination)." />
+      <comment value="Note that FHIR strings SHALL NOT exceed 1MB in size" />
+      <requirements value="Need to refer to a particular code in the system." />
+      <min value="1" />
+      <max value="1" />
+      <base>
+        <path value="Coding.code" />
+        <min value="0" />
+        <max value="1" />
+      </base>
+      <type>
+        <code value="code" />
+      </type>
+      <condition value="ele-1" />
+      <constraint>
+        <key value="ele-1" />
+        <severity value="error" />
+        <human value="All FHIR elements must have a @value or children" />
+        <expression value="hasValue() or (children().count() &gt; id.count())" />
+        <xpath value="@value|f:*|h:div" />
+        <source value="http://hl7.org/fhir/StructureDefinition/Element" />
+      </constraint>
+      <mustSupport value="true" />
+      <isSummary value="true" />
+      <mapping>
+        <identity value="rim" />
+        <map value="n/a" />
+      </mapping>
+      <mapping>
+        <identity value="v2" />
+        <map value="C*E.1" />
+      </mapping>
+      <mapping>
+        <identity value="rim" />
+        <map value="./code" />
+      </mapping>
+      <mapping>
+        <identity value="orim" />
+        <map value="fhir:Coding.code rdfs:subPropertyOf dt:CDCoding.code" />
+      </mapping>
+    </element>
+    <element id="Encounter.serviceType.coding:ErweiterterFachabteilungsschluessel.display">
+      <extension url="http://hl7.org/fhir/StructureDefinition/elementdefinition-translatable">
+        <valueBoolean value="true" />
+      </extension>
+      <path value="Encounter.serviceType.coding.display" />
+      <short value="Representation defined by the system" />
+      <definition value="A representation of the meaning of the code in the system, following the rules of the system." />
+      <comment value="Note that FHIR strings SHALL NOT exceed 1MB in size" />
+      <requirements value="Need to be able to carry a human-readable meaning of the code for readers that do not know  the system." />
+      <min value="0" />
+      <max value="1" />
+      <base>
+        <path value="Coding.display" />
+        <min value="0" />
+        <max value="1" />
+      </base>
+      <type>
+        <code value="string" />
+      </type>
+      <condition value="ele-1" />
+      <constraint>
+        <key value="ele-1" />
+        <severity value="error" />
+        <human value="All FHIR elements must have a @value or children" />
+        <expression value="hasValue() or (children().count() &gt; id.count())" />
+        <xpath value="@value|f:*|h:div" />
+        <source value="http://hl7.org/fhir/StructureDefinition/Element" />
+      </constraint>
+      <isSummary value="true" />
+      <mapping>
+        <identity value="rim" />
+        <map value="n/a" />
+      </mapping>
+      <mapping>
+        <identity value="v2" />
+        <map value="C*E.2 - but note this is not well followed" />
+      </mapping>
+      <mapping>
+        <identity value="rim" />
+        <map value="CV.displayName" />
+      </mapping>
+      <mapping>
+        <identity value="orim" />
+        <map value="fhir:Coding.display rdfs:subPropertyOf dt:CDCoding.displayName" />
+      </mapping>
+    </element>
+    <element id="Encounter.serviceType.coding:ErweiterterFachabteilungsschluessel.userSelected">
+      <path value="Encounter.serviceType.coding.userSelected" />
+      <short value="If this coding was chosen directly by the user" />
+      <definition value="Indicates that this coding was chosen by a user directly - e.g. off a pick list of available items (codes or displays)." />
+      <comment value="Amongst a set of alternatives, a directly chosen code is the most appropriate starting point for new translations. There is some ambiguity about what exactly 'directly chosen' implies, and trading partner agreement may be needed to clarify the use of this element and its consequences more completely." />
+      <requirements value="This has been identified as a clinical safety criterium - that this exact system/code pair was chosen explicitly, rather than inferred by the system based on some rules or language processing." />
+      <min value="0" />
+      <max value="1" />
+      <base>
+        <path value="Coding.userSelected" />
+        <min value="0" />
+        <max value="1" />
+      </base>
+      <type>
+        <code value="boolean" />
+      </type>
+      <condition value="ele-1" />
+      <constraint>
+        <key value="ele-1" />
+        <severity value="error" />
+        <human value="All FHIR elements must have a @value or children" />
+        <expression value="hasValue() or (children().count() &gt; id.count())" />
+        <xpath value="@value|f:*|h:div" />
+        <source value="http://hl7.org/fhir/StructureDefinition/Element" />
+      </constraint>
+      <isSummary value="true" />
+      <mapping>
+        <identity value="rim" />
+        <map value="n/a" />
+      </mapping>
+      <mapping>
+        <identity value="v2" />
+        <map value="Sometimes implied by being first" />
+      </mapping>
+      <mapping>
+        <identity value="rim" />
+        <map value="CD.codingRationale" />
+      </mapping>
+      <mapping>
+        <identity value="orim" />
+        <map value="fhir:Coding.userSelected fhir:mapsTo dt:CDCoding.codingRationale. fhir:Coding.userSelected fhir:hasMap fhir:Coding.userSelected.map. fhir:Coding.userSelected.map a fhir:Map;   fhir:target dt:CDCoding.codingRationale. fhir:Coding.userSelected\#true a [     fhir:source &quot;true&quot;;     fhir:target dt:CDCoding.codingRationale\#O   ]" />
+      </mapping>
+    </element>
     <element id="Encounter.serviceType.text">
       <extension url="http://hl7.org/fhir/StructureDefinition/elementdefinition-translatable">
         <valueBoolean value="true" />
@@ -4424,9 +5344,9 @@
         <valueCode value="4.0.0" />
       </extension>
       <path value="Encounter.subject" />
-      <short value="A reference from one resource to another" />
-      <definition value="A reference from one resource to another." />
-      <comment value="References SHALL be a reference to an actual FHIR resource, and SHALL be resolveable (allowing for access control, temporary unavailability, etc.). Resolution can be either by retrieval from the URL, or, where applicable by resource type, by treating an absolute reference as a canonical URL and looking it up in a local registry/repository." />
+      <short value="Patientenidentifikator" />
+      <definition value="VERPFLICHTEND, Referenz auf Patient:in." />
+      <comment value="While the encounter is always about the patient, the patient might not actually be known in all contexts of use, and there may be a group of patients that could be anonymous (such as in a group therapy for Alcoholics Anonymous - where the recording of the encounter could be used for billing on the number of people/staff and not important to the context of the specific patients) or alternately in veterinary care a herd of sheep receiving treatment (where the animals are not individually tracked)." />
       <alias value="patient" />
       <min value="1" />
       <max value="1" />
@@ -4437,7 +5357,6 @@
       </base>
       <type>
         <code value="Reference" />
-        <profile value="https://www.medizininformatik-initiative.de/fhir/core/StructureDefinition/MII-Reference" />
         <targetProfile value="http://hl7.org/fhir/StructureDefinition/Patient" />
         <targetProfile value="http://hl7.org/fhir/StructureDefinition/Group" />
       </type>
@@ -4457,13 +5376,6 @@
         <expression value="reference.startsWith('#').not() or (reference.substring(1).trace('url') in %rootResource.contained.id.trace('ids'))" />
         <xpath value="not(starts-with(f:reference/@value, '#')) or exists(ancestor::*[self::f:entry or self::f:parameter]/f:resource/f:*/f:contained/f:*[f:id/@value=substring-after(current()/f:reference/@value, '#')]|/*/f:contained/f:*[f:id/@value=substring-after(current()/f:reference/@value, '#')])" />
         <source value="http://hl7.org/fhir/StructureDefinition/Reference" />
-      </constraint>
-      <constraint>
-        <key value="mii-reference-1" />
-        <severity value="error" />
-        <human value="Either reference.reference OR reference.identifier exists" />
-        <expression value="($this.reference.exists() or ($this.identifier.value.exists() and $this.identifier.system.exists())) xor $this.extension('http://hl7.org/fhir/StructureDefinition/data-absent-reason').exists()" />
-        <source value="https://www.medizininformatik-initiative.de/fhir/core/StructureDefinition/MII-Reference" />
       </constraint>
       <mustSupport value="true" />
       <isSummary value="true" />
@@ -5058,10 +5970,44 @@
         <valueCode value="4.0.0" />
       </extension>
       <path value="Encounter.period" />
-      <short value="The start and end time of the encounter" />
-      <definition value="The start and end time of the encounter." />
+      <short value="Zeitraum des Kontaktes">
+        <extension url="http://hl7.org/fhir/StructureDefinition/translation">
+          <extension url="lang">
+            <valueCode value="de-DE" />
+          </extension>
+          <extension url="content">
+            <valueString value="Zeitraum des Kontaktes" />
+          </extension>
+        </extension>
+        <extension url="http://hl7.org/fhir/StructureDefinition/translation">
+          <extension url="lang">
+            <valueCode value="en-US" />
+          </extension>
+          <extension url="content">
+            <valueString value="Period of encounter" />
+          </extension>
+        </extension>
+      </short>
+      <definition value="Beginn- und Endzeitpunkt des Kontaktes. &#xA;    DARF NICHT vorhanden sein, kann OPTIONAL oder VERPFLICHTEND sein, &#xA;    abhängig vom Status des Kontaktes - siehe Invarianten auf Ebene Encounter.">
+        <extension url="http://hl7.org/fhir/StructureDefinition/translation">
+          <extension url="lang">
+            <valueCode value="de-DE" />
+          </extension>
+          <extension url="content">
+            <valueString value="Beginn- und Endzeitpunkt des Kontaktes." />
+          </extension>
+        </extension>
+        <extension url="http://hl7.org/fhir/StructureDefinition/translation">
+          <extension url="lang">
+            <valueCode value="en-US" />
+          </extension>
+          <extension url="content">
+            <valueString value="Start and end time of the encounter." />
+          </extension>
+        </extension>
+      </definition>
       <comment value="If not (yet) known, the end of the Period may be omitted." />
-      <min value="1" />
+      <min value="0" />
       <max value="1" />
       <base>
         <path value="Encounter.period" />
@@ -5200,10 +6146,10 @@
     </element>
     <element id="Encounter.period.start">
       <path value="Encounter.period.start" />
-      <short value="Starting time with inclusive boundary" />
-      <definition value="The start of the period. The boundary is inclusive." />
+      <short value="Beginndatum" />
+      <definition value="Start des Kontaktzeitraums. DARF NICHT vorhanden sein, kann OPTIONAL oder VERPFLICHTEND sein, &#xA;abhängig vom Status des Kontaktes - siehe Invarianten auf Ebene Encounter." />
       <comment value="If the low element is missing, the meaning is that the low boundary is not known." />
-      <min value="1" />
+      <min value="0" />
       <max value="1" />
       <base>
         <path value="Period.start" />
@@ -5240,8 +6186,8 @@
     </element>
     <element id="Encounter.period.end">
       <path value="Encounter.period.end" />
-      <short value="End time with inclusive boundary, if not ongoing" />
-      <definition value="The end of the period. If the end of the period is missing, it means no end was known or planned at the time the instance was created. The start may be in the past, and the end date in the future, which means that period is expected/planned to end at that time." />
+      <short value="Enddatum" />
+      <definition value="Ende des Kontaktzeitraums. DARF NICHT vorhanden sein, kann OPTIONAL oder VERPFLICHTEND sein, &#xA;abhängig vom Status des Kontaktes - siehe Invarianten auf Ebene Encounter." />
       <comment value="The high value includes any matching date/time. i.e. 2012-02-03T10:00:00 is in a period that has an end value of 2012-02-03." />
       <min value="0" />
       <max value="1" />
@@ -5509,8 +6455,42 @@
         <valueString value="Diagnosis" />
       </extension>
       <path value="Encounter.diagnosis" />
-      <short value="The list of diagnosis relevant to this encounter" />
-      <definition value="The list of diagnosis relevant to this encounter." />
+      <short value="Diagnosen">
+        <extension url="http://hl7.org/fhir/StructureDefinition/translation">
+          <extension url="lang">
+            <valueCode value="de-DE" />
+          </extension>
+          <extension url="content">
+            <valueString value="Diagnosen" />
+          </extension>
+        </extension>
+        <extension url="http://hl7.org/fhir/StructureDefinition/translation">
+          <extension url="lang">
+            <valueCode value="en-US" />
+          </extension>
+          <extension url="content">
+            <valueString value="Diagnoses" />
+          </extension>
+        </extension>
+      </short>
+      <definition value="OPTIONAL, Angaben zu Diagnosen">
+        <extension url="http://hl7.org/fhir/StructureDefinition/translation">
+          <extension url="lang">
+            <valueCode value="de-DE" />
+          </extension>
+          <extension url="content">
+            <valueString value="Angaben zu für den Kontakt relevanten Diagnosen" />
+          </extension>
+        </extension>
+        <extension url="http://hl7.org/fhir/StructureDefinition/translation">
+          <extension url="lang">
+            <valueCode value="en-US" />
+          </extension>
+          <extension url="content">
+            <valueString value="Information about diagnoses relevant for the encounter" />
+          </extension>
+        </extension>
+      </definition>
       <min value="0" />
       <max value="*" />
       <base>
@@ -5683,9 +6663,9 @@
         <valueCode value="4.0.0" />
       </extension>
       <path value="Encounter.diagnosis.condition" />
-      <short value="A reference from one resource to another" />
-      <definition value="A reference from one resource to another." />
-      <comment value="References SHALL be a reference to an actual FHIR resource, and SHALL be resolveable (allowing for access control, temporary unavailability, etc.). Resolution can be either by retrieval from the URL, or, where applicable by resource type, by treating an absolute reference as a canonical URL and looking it up in a local registry/repository." />
+      <short value="Referenz zu Diagnose-Ressource" />
+      <definition value="VERPFLICHTEND, wenn Diagnosedaten angegeben werden, dann MUSS diese referenziert werden. &#xA;Es SOLLTE nur die Primärdiagnose referenziert werden." />
+      <comment value="For systems that need to know which was the primary diagnosis, these will be marked with the standard extension primaryDiagnosis (which is a sequence value rather than a flag, 1 = primary diagnosis)." />
       <alias value="Admission diagnosis" />
       <alias value="discharge diagnosis" />
       <alias value="indication" />
@@ -5698,7 +6678,6 @@
       </base>
       <type>
         <code value="Reference" />
-        <profile value="https://www.medizininformatik-initiative.de/fhir/core/StructureDefinition/MII-Reference" />
         <targetProfile value="http://hl7.org/fhir/StructureDefinition/Condition" />
         <targetProfile value="http://hl7.org/fhir/StructureDefinition/Procedure" />
       </type>
@@ -5718,13 +6697,6 @@
         <expression value="reference.startsWith('#').not() or (reference.substring(1).trace('url') in %rootResource.contained.id.trace('ids'))" />
         <xpath value="not(starts-with(f:reference/@value, '#')) or exists(ancestor::*[self::f:entry or self::f:parameter]/f:resource/f:*/f:contained/f:*[f:id/@value=substring-after(current()/f:reference/@value, '#')]|/*/f:contained/f:*[f:id/@value=substring-after(current()/f:reference/@value, '#')])" />
         <source value="http://hl7.org/fhir/StructureDefinition/Reference" />
-      </constraint>
-      <constraint>
-        <key value="mii-reference-1" />
-        <severity value="error" />
-        <human value="Either reference.reference OR reference.identifier exists" />
-        <expression value="($this.reference.exists() or ($this.identifier.value.exists() and $this.identifier.system.exists())) xor $this.extension('http://hl7.org/fhir/StructureDefinition/data-absent-reason').exists()" />
-        <source value="https://www.medizininformatik-initiative.de/fhir/core/StructureDefinition/MII-Reference" />
       </constraint>
       <mustSupport value="true" />
       <isSummary value="true" />
@@ -5761,8 +6733,8 @@
         <valueCode value="4.0.0" />
       </extension>
       <path value="Encounter.diagnosis.use" />
-      <short value="Role that this diagnosis has within the encounter (e.g. admission, billing, discharge …)" />
-      <definition value="Role that this diagnosis has within the encounter (e.g. admission, billing, discharge …)." />
+      <short value="Diagnosetyp" />
+      <definition value="Attribute wie Aufnahme- oder Entlassdiagnose sind immer im Kontext eines stationären Aufenthaltes zu betrachten&#xA;und werden daher als Eigenschaft des Encounters modelliert. &#xA;VERPFLICHTEND mindestens die Angabe eines Codings. EMPFOHLEN ist die Angabe mittels Diagnosetyp- und DiagnosesubTyp-Coding. &#xA;Weitere Codings OPTIONAL. Extensible Binding auf `http://hl7.org/fhir/ValueSet/diagnosis-role`" />
       <comment value="Not all terminology uses fit this general pattern. In some cases, models should not use CodeableConcept and use Coding directly and provide their own structure for managing text, codings, translations and the relationship between elements and pre- and post-coordination." />
       <min value="1" />
       <max value="1" />
@@ -5793,7 +6765,7 @@
         </extension>
         <strength value="extensible" />
         <description value="The type of diagnosis this condition represents." />
-        <valueSet value="http://hl7.org/fhir/ValueSet/diagnosis-role" />
+        <valueSet value="https://www.medizininformatik-initiative.de/fhir/core/modul-fall/ValueSet/mii-vs-fall-diagnosis-use" />
       </binding>
       <mapping>
         <identity value="rim" />
@@ -5812,10 +6784,339 @@
         <map value="fhir:CodeableConcept rdfs:subClassOf dt:CD" />
       </mapping>
     </element>
+    <element id="Encounter.diagnosis.use.id">
+      <path value="Encounter.diagnosis.use.id" />
+      <representation value="xmlAttr" />
+      <short value="Unique id for inter-element referencing" />
+      <definition value="Unique id for the element within a resource (for internal references). This may be any string value that does not contain spaces." />
+      <min value="0" />
+      <max value="1" />
+      <base>
+        <path value="Element.id" />
+        <min value="0" />
+        <max value="1" />
+      </base>
+      <type>
+        <extension url="http://hl7.org/fhir/StructureDefinition/structuredefinition-fhir-type">
+          <valueUrl value="string" />
+        </extension>
+        <code value="http://hl7.org/fhirpath/System.String" />
+      </type>
+      <mapping>
+        <identity value="rim" />
+        <map value="n/a" />
+      </mapping>
+    </element>
+    <element id="Encounter.diagnosis.use.extension">
+      <extension url="http://hl7.org/fhir/StructureDefinition/structuredefinition-standards-status">
+        <valueCode value="normative" />
+      </extension>
+      <extension url="http://hl7.org/fhir/StructureDefinition/structuredefinition-normative-version">
+        <valueCode value="4.0.0" />
+      </extension>
+      <path value="Encounter.diagnosis.use.extension" />
+      <slicing>
+        <discriminator>
+          <type value="value" />
+          <path value="url" />
+        </discriminator>
+        <description value="Extensions are always sliced by (at least) url" />
+        <rules value="open" />
+      </slicing>
+      <short value="Additional content defined by implementations" />
+      <definition value="May be used to represent additional information that is not part of the basic definition of the element. To make the use of extensions safe and manageable, there is a strict set of governance  applied to the definition and use of extensions. Though any implementer can define an extension, there is a set of requirements that SHALL be met as part of the definition of the extension." />
+      <comment value="There can be no stigma associated with the use of extensions by any application, project, or standard - regardless of the institution or jurisdiction that uses or defines the extensions.  The use of extensions is what allows the FHIR specification to retain a core level of simplicity for everyone." />
+      <alias value="extensions" />
+      <alias value="user content" />
+      <min value="0" />
+      <max value="*" />
+      <base>
+        <path value="Element.extension" />
+        <min value="0" />
+        <max value="*" />
+      </base>
+      <type>
+        <code value="Extension" />
+      </type>
+      <condition value="ele-1" />
+      <constraint>
+        <key value="ele-1" />
+        <severity value="error" />
+        <human value="All FHIR elements must have a @value or children" />
+        <expression value="hasValue() or (children().count() &gt; id.count())" />
+        <xpath value="@value|f:*|h:div" />
+        <source value="http://hl7.org/fhir/StructureDefinition/Element" />
+      </constraint>
+      <constraint>
+        <key value="ext-1" />
+        <severity value="error" />
+        <human value="Must have either extensions or value[x], not both" />
+        <expression value="extension.exists() != value.exists()" />
+        <xpath value="exists(f:extension)!=exists(f:*[starts-with(local-name(.), 'value')])" />
+        <source value="http://hl7.org/fhir/StructureDefinition/Extension" />
+      </constraint>
+      <mapping>
+        <identity value="rim" />
+        <map value="n/a" />
+      </mapping>
+      <mapping>
+        <identity value="rim" />
+        <map value="N/A" />
+      </mapping>
+    </element>
+    <element id="Encounter.diagnosis.use.coding">
+      <extension url="http://hl7.org/fhir/StructureDefinition/structuredefinition-standards-status">
+        <valueCode value="normative" />
+      </extension>
+      <extension url="http://hl7.org/fhir/StructureDefinition/structuredefinition-normative-version">
+        <valueCode value="4.0.0" />
+      </extension>
+      <path value="Encounter.diagnosis.use.coding" />
+      <slicing>
+        <discriminator>
+          <type value="pattern" />
+          <path value="$this" />
+        </discriminator>
+        <rules value="open" />
+      </slicing>
+      <short value="Code defined by a terminology system" />
+      <definition value="A reference to a code defined by a terminology system." />
+      <comment value="Codes may be defined very casually in enumerations, or code lists, up to very formal definitions such as SNOMED CT - see the HL7 v3 Core Principles for more information.  Ordering of codings is undefined and SHALL NOT be used to infer meaning. Generally, at most only one of the coding values will be labeled as UserSelected = true." />
+      <requirements value="Allows for alternative encodings within a code system, and translations to other code systems." />
+      <min value="1" />
+      <max value="*" />
+      <base>
+        <path value="CodeableConcept.coding" />
+        <min value="0" />
+        <max value="*" />
+      </base>
+      <type>
+        <code value="Coding" />
+      </type>
+      <condition value="ele-1" />
+      <constraint>
+        <key value="ele-1" />
+        <severity value="error" />
+        <human value="All FHIR elements must have a @value or children" />
+        <expression value="hasValue() or (children().count() &gt; id.count())" />
+        <xpath value="@value|f:*|h:div" />
+        <source value="http://hl7.org/fhir/StructureDefinition/Element" />
+      </constraint>
+      <mustSupport value="true" />
+      <isSummary value="true" />
+      <mapping>
+        <identity value="rim" />
+        <map value="n/a" />
+      </mapping>
+      <mapping>
+        <identity value="v2" />
+        <map value="CE/CNE/CWE subset one of the sets of component 1-3 or 4-6" />
+      </mapping>
+      <mapping>
+        <identity value="rim" />
+        <map value="CV" />
+      </mapping>
+      <mapping>
+        <identity value="orim" />
+        <map value="fhir:Coding rdfs:subClassOf dt:CDCoding" />
+      </mapping>
+      <mapping>
+        <identity value="v2" />
+        <map value="C*E.1-8, C*E.10-22" />
+      </mapping>
+      <mapping>
+        <identity value="rim" />
+        <map value="union(., ./translation)" />
+      </mapping>
+      <mapping>
+        <identity value="orim" />
+        <map value="fhir:CodeableConcept.coding rdfs:subPropertyOf dt:CD.coding" />
+      </mapping>
+    </element>
+    <element id="Encounter.diagnosis.use.coding:Diagnosetyp">
+      <extension url="http://hl7.org/fhir/StructureDefinition/structuredefinition-standards-status">
+        <valueCode value="normative" />
+      </extension>
+      <extension url="http://hl7.org/fhir/StructureDefinition/structuredefinition-normative-version">
+        <valueCode value="4.0.0" />
+      </extension>
+      <path value="Encounter.diagnosis.use.coding" />
+      <sliceName value="Diagnosetyp" />
+      <short value="Diagnosetyp" />
+      <definition value="Einweisungs-/Überweisungsdiagnose | Behandlungsrelevante Diagnosen" />
+      <comment value="Codes may be defined very casually in enumerations, or code lists, up to very formal definitions such as SNOMED CT - see the HL7 v3 Core Principles for more information.  Ordering of codings is undefined and SHALL NOT be used to infer meaning. Generally, at most only one of the coding values will be labeled as UserSelected = true." />
+      <requirements value="Allows for alternative encodings within a code system, and translations to other code systems." />
+      <min value="0" />
+      <max value="1" />
+      <base>
+        <path value="CodeableConcept.coding" />
+        <min value="0" />
+        <max value="*" />
+      </base>
+      <type>
+        <code value="Coding" />
+      </type>
+      <condition value="ele-1" />
+      <constraint>
+        <key value="ele-1" />
+        <severity value="error" />
+        <human value="All FHIR elements must have a @value or children" />
+        <expression value="hasValue() or (children().count() &gt; id.count())" />
+        <xpath value="@value|f:*|h:div" />
+        <source value="http://hl7.org/fhir/StructureDefinition/Element" />
+      </constraint>
+      <mustSupport value="true" />
+      <isSummary value="true" />
+      <binding>
+        <strength value="required" />
+        <valueSet value="http://fhir.de/ValueSet/DiagnoseTyp" />
+      </binding>
+      <mapping>
+        <identity value="rim" />
+        <map value="n/a" />
+      </mapping>
+      <mapping>
+        <identity value="v2" />
+        <map value="CE/CNE/CWE subset one of the sets of component 1-3 or 4-6" />
+      </mapping>
+      <mapping>
+        <identity value="rim" />
+        <map value="CV" />
+      </mapping>
+      <mapping>
+        <identity value="orim" />
+        <map value="fhir:Coding rdfs:subClassOf dt:CDCoding" />
+      </mapping>
+      <mapping>
+        <identity value="v2" />
+        <map value="C*E.1-8, C*E.10-22" />
+      </mapping>
+      <mapping>
+        <identity value="rim" />
+        <map value="union(., ./translation)" />
+      </mapping>
+      <mapping>
+        <identity value="orim" />
+        <map value="fhir:CodeableConcept.coding rdfs:subPropertyOf dt:CD.coding" />
+      </mapping>
+    </element>
+    <element id="Encounter.diagnosis.use.coding:DiagnosesubTyp">
+      <extension url="http://hl7.org/fhir/StructureDefinition/structuredefinition-standards-status">
+        <valueCode value="normative" />
+      </extension>
+      <extension url="http://hl7.org/fhir/StructureDefinition/structuredefinition-normative-version">
+        <valueCode value="4.0.0" />
+      </extension>
+      <path value="Encounter.diagnosis.use.coding" />
+      <sliceName value="DiagnosesubTyp" />
+      <short value="Diagnosesubtyp" />
+      <definition value="Operationsdiagnose | Abteilung Hauptdiagnose | Todesursache | Infektionsschutzdiagnose +" />
+      <comment value="Codes may be defined very casually in enumerations, or code lists, up to very formal definitions such as SNOMED CT - see the HL7 v3 Core Principles for more information.  Ordering of codings is undefined and SHALL NOT be used to infer meaning. Generally, at most only one of the coding values will be labeled as UserSelected = true." />
+      <requirements value="Allows for alternative encodings within a code system, and translations to other code systems." />
+      <min value="0" />
+      <max value="1" />
+      <base>
+        <path value="CodeableConcept.coding" />
+        <min value="0" />
+        <max value="*" />
+      </base>
+      <type>
+        <code value="Coding" />
+      </type>
+      <condition value="ele-1" />
+      <constraint>
+        <key value="ele-1" />
+        <severity value="error" />
+        <human value="All FHIR elements must have a @value or children" />
+        <expression value="hasValue() or (children().count() &gt; id.count())" />
+        <xpath value="@value|f:*|h:div" />
+        <source value="http://hl7.org/fhir/StructureDefinition/Element" />
+      </constraint>
+      <mustSupport value="true" />
+      <isSummary value="true" />
+      <binding>
+        <strength value="required" />
+        <valueSet value="http://fhir.de/ValueSet/Diagnosesubtyp" />
+      </binding>
+      <mapping>
+        <identity value="rim" />
+        <map value="n/a" />
+      </mapping>
+      <mapping>
+        <identity value="v2" />
+        <map value="CE/CNE/CWE subset one of the sets of component 1-3 or 4-6" />
+      </mapping>
+      <mapping>
+        <identity value="rim" />
+        <map value="CV" />
+      </mapping>
+      <mapping>
+        <identity value="orim" />
+        <map value="fhir:Coding rdfs:subClassOf dt:CDCoding" />
+      </mapping>
+      <mapping>
+        <identity value="v2" />
+        <map value="C*E.1-8, C*E.10-22" />
+      </mapping>
+      <mapping>
+        <identity value="rim" />
+        <map value="union(., ./translation)" />
+      </mapping>
+      <mapping>
+        <identity value="orim" />
+        <map value="fhir:CodeableConcept.coding rdfs:subPropertyOf dt:CD.coding" />
+      </mapping>
+    </element>
+    <element id="Encounter.diagnosis.use.text">
+      <extension url="http://hl7.org/fhir/StructureDefinition/elementdefinition-translatable">
+        <valueBoolean value="true" />
+      </extension>
+      <path value="Encounter.diagnosis.use.text" />
+      <short value="Plain text representation of the concept" />
+      <definition value="A human language representation of the concept as seen/selected/uttered by the user who entered the data and/or which represents the intended meaning of the user." />
+      <comment value="Very often the text is the same as a displayName of one of the codings." />
+      <requirements value="The codes from the terminologies do not always capture the correct meaning with all the nuances of the human using them, or sometimes there is no appropriate code at all. In these cases, the text is used to capture the full meaning of the source." />
+      <min value="0" />
+      <max value="1" />
+      <base>
+        <path value="CodeableConcept.text" />
+        <min value="0" />
+        <max value="1" />
+      </base>
+      <type>
+        <code value="string" />
+      </type>
+      <condition value="ele-1" />
+      <constraint>
+        <key value="ele-1" />
+        <severity value="error" />
+        <human value="All FHIR elements must have a @value or children" />
+        <expression value="hasValue() or (children().count() &gt; id.count())" />
+        <xpath value="@value|f:*|h:div" />
+        <source value="http://hl7.org/fhir/StructureDefinition/Element" />
+      </constraint>
+      <isSummary value="true" />
+      <mapping>
+        <identity value="rim" />
+        <map value="n/a" />
+      </mapping>
+      <mapping>
+        <identity value="v2" />
+        <map value="C*E.9. But note many systems use C*E.2 for this" />
+      </mapping>
+      <mapping>
+        <identity value="rim" />
+        <map value="./originalText[mediaType/code=&quot;text/plain&quot;]/data" />
+      </mapping>
+      <mapping>
+        <identity value="orim" />
+        <map value="fhir:CodeableConcept.text rdfs:subPropertyOf dt:CD.originalText" />
+      </mapping>
+    </element>
     <element id="Encounter.diagnosis.rank">
       <path value="Encounter.diagnosis.rank" />
-      <short value="Ranking of the diagnosis (for each role type)" />
-      <definition value="Ranking of the diagnosis (for each role type)." />
+      <short value="Rangfolge" />
+      <definition value="OPTIONAL, Rangfolge der Diagnose" />
       <comment value="32 bit number; for values larger than this, use decimal" />
       <min value="0" />
       <max value="1" />
@@ -5906,8 +7207,42 @@
         <valueCode value="4.0.0" />
       </extension>
       <path value="Encounter.hospitalization" />
-      <short value="Details about the admission to a healthcare service" />
-      <definition value="Details about the admission to a healthcare service." />
+      <short value="Klinikaufenthalt">
+        <extension url="http://hl7.org/fhir/StructureDefinition/translation">
+          <extension url="lang">
+            <valueCode value="de-DE" />
+          </extension>
+          <extension url="content">
+            <valueString value="Klinikaufenthalt" />
+          </extension>
+        </extension>
+        <extension url="http://hl7.org/fhir/StructureDefinition/translation">
+          <extension url="lang">
+            <valueCode value="en-US" />
+          </extension>
+          <extension url="content">
+            <valueString value="Hospitalization" />
+          </extension>
+        </extension>
+      </short>
+      <definition value="OPTIONAL, Details zur Aufnahme und Entlassung">
+        <extension url="http://hl7.org/fhir/StructureDefinition/translation">
+          <extension url="lang">
+            <valueCode value="de-DE" />
+          </extension>
+          <extension url="content">
+            <valueString value="Details zur Aufnahme und Entlassung" />
+          </extension>
+        </extension>
+        <extension url="http://hl7.org/fhir/StructureDefinition/translation">
+          <extension url="lang">
+            <valueCode value="en-US" />
+          </extension>
+          <extension url="content">
+            <valueString value="Details about admission and discharge" />
+          </extension>
+        </extension>
+      </definition>
       <comment value="An Encounter may cover more than just the inpatient stay. Contexts such as outpatients, community clinics, and aged care facilities are also included.&#xD;&#xD;The duration recorded in the period of this encounter covers the entire scope of this hospitalization record." />
       <min value="0" />
       <max value="1" />
@@ -6187,8 +7522,8 @@
         <valueCode value="4.0.0" />
       </extension>
       <path value="Encounter.hospitalization.admitSource" />
-      <short value="From where patient was admitted (physician referral, transfer)" />
-      <definition value="From where patient was admitted (physician referral, transfer)." />
+      <short value="Aufnahmeanlass" />
+      <definition value="VERPFLICHTEND, Aufnahmeanlass. Preferred Binding auf http://fhir.de/ValueSet/dgkev/Aufnahmeanlass" />
       <comment value="Not all terminology uses fit this general pattern. In some cases, models should not use CodeableConcept and use Coding directly and provide their own structure for managing text, codings, translations and the relationship between elements and pre- and post-coordination." />
       <min value="1" />
       <max value="1" />
@@ -6557,8 +7892,8 @@
         <valueCode value="4.0.0" />
       </extension>
       <path value="Encounter.hospitalization.dischargeDisposition" />
-      <short value="Category or kind of location after discharge" />
-      <definition value="Category or kind of location after discharge." />
+      <short value="Entlassung" />
+      <definition value="OPTIONAL Daten zur Entlassung" />
       <comment value="Not all terminology uses fit this general pattern. In some cases, models should not use CodeableConcept and use Coding directly and provide their own structure for managing text, codings, translations and the relationship between elements and pre- and post-coordination." />
       <min value="0" />
       <max value="1" />
@@ -6702,8 +8037,8 @@
       </extension>
       <path value="Encounter.hospitalization.dischargeDisposition.extension" />
       <sliceName value="Entlassungsgrund" />
-      <short value="Optional Extensions Element" />
-      <definition value="Optional Extension Element - found in all resources." />
+      <short value="Entlassungsgrund" />
+      <definition value="OPTIONAL, Entlassungs-/Verlegungsgrund nach § 301 Abs. 3 SGB V" />
       <comment value="There can be no stigma associated with the use of extensions by any application, project, or standard - regardless of the institution or jurisdiction that uses or defines the extensions.  The use of extensions is what allows the FHIR specification to retain a core level of simplicity for everyone." />
       <alias value="extensions" />
       <alias value="user content" />
@@ -6867,8 +8202,42 @@
         </discriminator>
         <rules value="open" />
       </slicing>
-      <short value="List of locations where the patient has been" />
-      <definition value="List of locations where  the patient has been during this encounter." />
+      <short value="Kontaktort">
+        <extension url="http://hl7.org/fhir/StructureDefinition/translation">
+          <extension url="lang">
+            <valueCode value="de-DE" />
+          </extension>
+          <extension url="content">
+            <valueString value="Kontaktort" />
+          </extension>
+        </extension>
+        <extension url="http://hl7.org/fhir/StructureDefinition/translation">
+          <extension url="lang">
+            <valueCode value="en-US" />
+          </extension>
+          <extension url="content">
+            <valueString value="Location" />
+          </extension>
+        </extension>
+      </short>
+      <definition value="OPTIONAL, Details zum Kontaktort wie Zimmer, Bett, Station">
+        <extension url="http://hl7.org/fhir/StructureDefinition/translation">
+          <extension url="lang">
+            <valueCode value="de-DE" />
+          </extension>
+          <extension url="content">
+            <valueString value="Details zum Kontaktort wie Zimmer, Bett, Station" />
+          </extension>
+        </extension>
+        <extension url="http://hl7.org/fhir/StructureDefinition/translation">
+          <extension url="lang">
+            <valueCode value="en-US" />
+          </extension>
+          <extension url="content">
+            <valueString value="Details about location such as room, bed, ward" />
+          </extension>
+        </extension>
+      </definition>
       <comment value="Virtual encounters can be recorded in the Encounter by specifying a location reference to a location of type &quot;kind&quot; such as &quot;client's home&quot; and an encounter.class = &quot;virtual&quot;." />
       <min value="0" />
       <max value="*" />
@@ -7146,8 +8515,8 @@
         <valueCode value="4.0.0" />
       </extension>
       <path value="Encounter.location.physicalType" />
-      <short value="The physical type of the location (usually the level in the location hierachy - bed room ward etc.)" />
-      <definition value="This will be used to specify the required levels (bed/ward/room/etc.) desired to be recorded to simplify either messaging or query." />
+      <short value="Kontaktorttyp" />
+      <definition value="SOLL, extensible Binding auf https://www.medizininformatik-initiative.de/fhir/core/modul-fall/ValueSet/location-physical-type" />
       <comment value="This information is de-normalized from the Location resource to support the easier understanding of the encounter resource and processing in messaging or query.&#xA;&#xA;There may be many levels in the hierachy, and this may only pic specific levels that are required for a specific usage scenario." />
       <min value="0" />
       <max value="1" />
@@ -7257,8 +8626,8 @@
       </extension>
       <path value="Encounter.location" />
       <sliceName value="Zimmer" />
-      <short value="List of locations where the patient has been" />
-      <definition value="List of locations where  the patient has been during this encounter." />
+      <short value="Zimmer" />
+      <definition value="Von Patient oder Patientin während des Kontaktes belegtes Zimmer auf einer Station." />
       <comment value="Virtual encounters can be recorded in the Encounter by specifying a location reference to a location of type &quot;kind&quot; such as &quot;client's home&quot; and an encounter.class = &quot;virtual&quot;." />
       <min value="0" />
       <max value="1" />
@@ -7903,8 +9272,8 @@
       </extension>
       <path value="Encounter.location" />
       <sliceName value="Bett" />
-      <short value="List of locations where the patient has been" />
-      <definition value="List of locations where  the patient has been during this encounter." />
+      <short value="Bett" />
+      <definition value="Von Patient oder Patientin während des Kontaktes belegter Bettenstellplatz." />
       <comment value="Virtual encounters can be recorded in the Encounter by specifying a location reference to a location of type &quot;kind&quot; such as &quot;client's home&quot; and an encounter.class = &quot;virtual&quot;." />
       <min value="0" />
       <max value="1" />
@@ -8549,8 +9918,8 @@
       </extension>
       <path value="Encounter.location" />
       <sliceName value="Station" />
-      <short value="List of locations where the patient has been" />
-      <definition value="List of locations where  the patient has been during this encounter." />
+      <short value="Station" />
+      <definition value="Die Station, auf welcher der Patient oder die Patientin während des Kontaktes behandelt wurde." />
       <comment value="Virtual encounters can be recorded in the Encounter by specifying a location reference to a location of type &quot;kind&quot; such as &quot;client's home&quot; and an encounter.class = &quot;virtual&quot;." />
       <min value="0" />
       <max value="1" />
@@ -9194,8 +10563,42 @@
         <valueCode value="4.0.0" />
       </extension>
       <path value="Encounter.serviceProvider" />
-      <short value="The organization (facility) responsible for this encounter" />
-      <definition value="The organization that is primarily responsible for this Encounter's services. This MAY be the same as the organization on the Patient record, however it could be different, such as if the actor performing the services was from an external organization (which may be billed seperately) for an external consultation.  Refer to the example bundle showing an abbreviated set of Encounters for a colonoscopy." />
+      <short value="Leistungserbringer">
+        <extension url="http://hl7.org/fhir/StructureDefinition/translation">
+          <extension url="lang">
+            <valueCode value="de-DE" />
+          </extension>
+          <extension url="content">
+            <valueString value="Leistungserbringer" />
+          </extension>
+        </extension>
+        <extension url="http://hl7.org/fhir/StructureDefinition/translation">
+          <extension url="lang">
+            <valueCode value="en-US" />
+          </extension>
+          <extension url="content">
+            <valueString value="Service Provider" />
+          </extension>
+        </extension>
+      </short>
+      <definition value="OPTIONAL. Leistungserbringer, der für den Kontakt verantwortlich ist. &#xA;Referenz auf eine Organisation">
+        <extension url="http://hl7.org/fhir/StructureDefinition/translation">
+          <extension url="lang">
+            <valueCode value="de-DE" />
+          </extension>
+          <extension url="content">
+            <valueString value="Leistungserbringer, der für den Kontakt verantwortlich ist." />
+          </extension>
+        </extension>
+        <extension url="http://hl7.org/fhir/StructureDefinition/translation">
+          <extension url="lang">
+            <valueCode value="en-US" />
+          </extension>
+          <extension url="content">
+            <valueString value="Service provider responsible for the encounter." />
+          </extension>
+        </extension>
+      </definition>
       <comment value="References SHALL be a reference to an actual FHIR resource, and SHALL be resolveable (allowing for access control, temporary unavailability, etc.). Resolution can be either by retrieval from the URL, or, where applicable by resource type, by treating an absolute reference as a canonical URL and looking it up in a local registry/repository." />
       <min value="0" />
       <max value="1" />
@@ -9255,8 +10658,42 @@
         <valueCode value="4.0.0" />
       </extension>
       <path value="Encounter.partOf" />
-      <short value="Another Encounter this encounter is part of" />
-      <definition value="Another Encounter of which this encounter is a part of (administratively or in time)." />
+      <short value="Teil von Kontakt">
+        <extension url="http://hl7.org/fhir/StructureDefinition/translation">
+          <extension url="lang">
+            <valueCode value="de-DE" />
+          </extension>
+          <extension url="content">
+            <valueString value="Teil von Kontakt" />
+          </extension>
+        </extension>
+        <extension url="http://hl7.org/fhir/StructureDefinition/translation">
+          <extension url="lang">
+            <valueCode value="en-US" />
+          </extension>
+          <extension url="content">
+            <valueString value="Part of encounter" />
+          </extension>
+        </extension>
+      </short>
+      <definition value="OPTIONAL. Abbildung der Hierarchie zwischen Kontaktebenen durch Referenz auf weitere Kontakte, &#xA;wenn bspw. ein Versorgungsstellenkontakt Teil eines Abteilungskontaktes &#xA;oder ein Abteilungskontakt Teil eines Einrichtungskontaktes ist.">
+        <extension url="http://hl7.org/fhir/StructureDefinition/translation">
+          <extension url="lang">
+            <valueCode value="de-DE" />
+          </extension>
+          <extension url="content">
+            <valueString value="Abbildung der Hierarchie zwischen Kontaktebenen durch Referenz auf weitere Kontakte." />
+          </extension>
+        </extension>
+        <extension url="http://hl7.org/fhir/StructureDefinition/translation">
+          <extension url="lang">
+            <valueCode value="en-US" />
+          </extension>
+          <extension url="content">
+            <valueString value="Hierarchy between encounter levels by referencing further encounters." />
+          </extension>
+        </extension>
+      </definition>
       <comment value="This is also used for associating a child's encounter back to the mother's encounter.&#xD;&#xD;Refer to the Notes section in the Patient resource for further details." />
       <min value="0" />
       <max value="1" />
@@ -9314,17 +10751,61 @@
       <constraint>
         <key value="mii-enc-1" />
         <severity value="error" />
-        <human value="Falls der Encounter abgeschlossen wurde muss ein Enddatum bekannt sein" />
+        <human value="Falls der Encounter abgeschlossen wurde, MUSS ein Enddatum bekannt sein" />
         <expression value="status = 'finished' implies period.end.exists()" />
+        <source value="https://www.medizininformatik-initiative.de/fhir/core/modul-fall/StructureDefinition/KontaktGesundheitseinrichtung" />
+      </constraint>
+      <constraint>
+        <key value="mii-enc-2" />
+        <severity value="error" />
+        <human value="Abgeschlossene, stationäre Kontakte MÜSSEN einen Start- und End-Zeitpunkt angeben" />
+        <expression value="status = 'finished' and class = 'IMP' implies period.start.exists() and period.end.exists()" />
+        <source value="https://www.medizininformatik-initiative.de/fhir/core/modul-fall/StructureDefinition/KontaktGesundheitseinrichtung" />
+      </constraint>
+      <constraint>
+        <key value="mii-enc-3" />
+        <severity value="error" />
+        <human value="Geplante Kontakte DÜRFEN NICHT einen Start- oder End-Zeitpunkt angeben" />
+        <expression value="status = 'planned' implies period.exists().not()" />
+        <source value="https://www.medizininformatik-initiative.de/fhir/core/modul-fall/StructureDefinition/KontaktGesundheitseinrichtung" />
+      </constraint>
+      <constraint>
+        <key value="mii-enc-4" />
+        <severity value="warning" />
+        <human value="Geplante Kontakte SOLLTEN die Extensions für den geplanten Start- oder End-Zeitpunkt verwenden" />
+        <expression value="status = 'planned' implies extension.where(url = 'http://hl7.org/fhir/5.0/StructureDefinition/extension-Encounter.plannedStartDate').exists()" />
+        <source value="https://www.medizininformatik-initiative.de/fhir/core/modul-fall/StructureDefinition/KontaktGesundheitseinrichtung" />
+      </constraint>
+      <constraint>
+        <key value="mii-enc-5" />
+        <severity value="error" />
+        <human value="In-Durchführung befindliche Kontakte MÜSSEN einen Start-Zeitpunkt angeben" />
+        <expression value="status = 'in-progress' implies period.start.exists()" />
+        <source value="https://www.medizininformatik-initiative.de/fhir/core/modul-fall/StructureDefinition/KontaktGesundheitseinrichtung" />
+      </constraint>
+      <constraint>
+        <key value="mii-enc-6" />
+        <severity value="error" />
+        <human value="Kontakte mit Abwesenheitsstatus MÜSSEN einen Start-Zeitpunkt angeben" />
+        <expression value="status = 'onleave' implies period.start.exists()" />
+        <source value="https://www.medizininformatik-initiative.de/fhir/core/modul-fall/StructureDefinition/KontaktGesundheitseinrichtung" />
+      </constraint>
+      <constraint>
+        <key value="mii-enc-7" />
+        <severity value="warning" />
+        <human value="Kontakte mit unbekannten Status SOLLTEN einen Start-Zeitpunkt angeben" />
+        <expression value="status = 'unknown' implies period.start.exists()" />
         <source value="https://www.medizininformatik-initiative.de/fhir/core/modul-fall/StructureDefinition/KontaktGesundheitseinrichtung" />
       </constraint>
     </element>
     <element id="Encounter.id">
       <path value="Encounter.id" />
+      <definition value="Angabe OPTIONAL, vom Server automatisch vergebene system-abhängige ID" />
       <mustSupport value="true" />
     </element>
     <element id="Encounter.meta">
       <path value="Encounter.meta" />
+      <definition value="Angabe OPTIONAL zur Provenance und zum Profil" />
       <mustSupport value="true" />
     </element>
     <element id="Encounter.meta.source">
@@ -9338,6 +10819,42 @@
     <element id="Encounter.extension:Aufnahmegrund">
       <path value="Encounter.extension" />
       <sliceName value="Aufnahmegrund" />
+      <short value="Aufnahmegrund">
+        <extension url="http://hl7.org/fhir/StructureDefinition/translation">
+          <extension url="lang">
+            <valueCode value="de-DE" />
+          </extension>
+          <extension url="content">
+            <valueString value="Aufnahmegrund" />
+          </extension>
+        </extension>
+        <extension url="http://hl7.org/fhir/StructureDefinition/translation">
+          <extension url="lang">
+            <valueCode value="en-US" />
+          </extension>
+          <extension url="content">
+            <valueString value="Admission reason" />
+          </extension>
+        </extension>
+      </short>
+      <definition value="OPTIONAL, Aufnahmegrund entsprechend Schlüssel 1 der Anlage 2 der Datenübermittlung nach § 301 Abs. 3 SGB V">
+        <extension url="http://hl7.org/fhir/StructureDefinition/translation">
+          <extension url="lang">
+            <valueCode value="de-DE" />
+          </extension>
+          <extension url="content">
+            <valueString value="Aufnahmegrund nach Schlüssel 1, Anlage 2, Datenübermittlung nach § 301 Abs. 3 SGB V" />
+          </extension>
+        </extension>
+        <extension url="http://hl7.org/fhir/StructureDefinition/translation">
+          <extension url="lang">
+            <valueCode value="en-US" />
+          </extension>
+          <extension url="content">
+            <valueString value="Admission reason according to key 1, appendix 2, data transmission according to § 301 para. 3 SGB V" />
+          </extension>
+        </extension>
+      </definition>
       <min value="0" />
       <max value="1" />
       <type>
@@ -9349,17 +10866,145 @@
     <element id="Encounter.extension:Aufnahmegrund.extension:ErsteUndZweiteStelle">
       <path value="Encounter.extension.extension" />
       <sliceName value="ErsteUndZweiteStelle" />
+      <short>
+        <extension url="http://hl7.org/fhir/StructureDefinition/translation">
+          <extension url="lang">
+            <valueCode value="de-DE" />
+          </extension>
+          <extension url="content">
+            <valueString value="1. und 2. Stelle" />
+          </extension>
+        </extension>
+        <extension url="http://hl7.org/fhir/StructureDefinition/translation">
+          <extension url="lang">
+            <valueCode value="en-US" />
+          </extension>
+          <extension url="content">
+            <valueString value="1st and 2nd position" />
+          </extension>
+        </extension>
+      </short>
+      <definition value="OPTIONAL, Aufnahmegrund (1. und 2. Stelle), Datenübermittlung nach § 301 Abs. 3 SGB V.">
+        <extension url="http://hl7.org/fhir/StructureDefinition/translation">
+          <extension url="lang">
+            <valueCode value="de-DE" />
+          </extension>
+          <extension url="content">
+            <valueString value="Aufnahmegrund 1. und 2. Stelle" />
+          </extension>
+        </extension>
+        <extension url="http://hl7.org/fhir/StructureDefinition/translation">
+          <extension url="lang">
+            <valueCode value="en-US" />
+          </extension>
+          <extension url="content">
+            <valueString value="Admission reason 1st and 2nd position" />
+          </extension>
+        </extension>
+      </definition>
       <mustSupport value="true" />
     </element>
     <element id="Encounter.extension:Aufnahmegrund.extension:DritteStelle">
       <path value="Encounter.extension.extension" />
       <sliceName value="DritteStelle" />
+      <short>
+        <extension url="http://hl7.org/fhir/StructureDefinition/translation">
+          <extension url="lang">
+            <valueCode value="de-DE" />
+          </extension>
+          <extension url="content">
+            <valueString value="3. Stelle" />
+          </extension>
+        </extension>
+        <extension url="http://hl7.org/fhir/StructureDefinition/translation">
+          <extension url="lang">
+            <valueCode value="en-US" />
+          </extension>
+          <extension url="content">
+            <valueString value="3rd position" />
+          </extension>
+        </extension>
+      </short>
+      <definition value="OPTIONAL, Aufnahmegrund (3. Stelle), Datenübermittlung nach § 301 Abs. 3 SGB V.">
+        <extension url="http://hl7.org/fhir/StructureDefinition/translation">
+          <extension url="lang">
+            <valueCode value="de-DE" />
+          </extension>
+          <extension url="content">
+            <valueString value="Aufnahmegrund 3. Stelle" />
+          </extension>
+        </extension>
+        <extension url="http://hl7.org/fhir/StructureDefinition/translation">
+          <extension url="lang">
+            <valueCode value="en-US" />
+          </extension>
+          <extension url="content">
+            <valueString value="Admission reason 3rd position" />
+          </extension>
+        </extension>
+      </definition>
       <mustSupport value="true" />
     </element>
     <element id="Encounter.extension:Aufnahmegrund.extension:VierteStelle">
       <path value="Encounter.extension.extension" />
       <sliceName value="VierteStelle" />
+      <short>
+        <extension url="http://hl7.org/fhir/StructureDefinition/translation">
+          <extension url="lang">
+            <valueCode value="de-DE" />
+          </extension>
+          <extension url="content">
+            <valueString value="4. Stelle" />
+          </extension>
+        </extension>
+        <extension url="http://hl7.org/fhir/StructureDefinition/translation">
+          <extension url="lang">
+            <valueCode value="en-US" />
+          </extension>
+          <extension url="content">
+            <valueString value="4th position" />
+          </extension>
+        </extension>
+      </short>
+      <definition value="OPTIONAL, Aufnahmegrund (4. Stelle), Datenübermittlung nach § 301 Abs. 3 SGB V.">
+        <extension url="http://hl7.org/fhir/StructureDefinition/translation">
+          <extension url="lang">
+            <valueCode value="de-DE" />
+          </extension>
+          <extension url="content">
+            <valueString value="Aufnahmegrund 4. Stelle" />
+          </extension>
+        </extension>
+        <extension url="http://hl7.org/fhir/StructureDefinition/translation">
+          <extension url="lang">
+            <valueCode value="en-US" />
+          </extension>
+          <extension url="content">
+            <valueString value="Admission reason 4th position" />
+          </extension>
+        </extension>
+      </definition>
       <mustSupport value="true" />
+    </element>
+    <element id="Encounter.extension:plannedStartDate">
+      <path value="Encounter.extension" />
+      <sliceName value="plannedStartDate" />
+      <min value="0" />
+      <max value="1" />
+      <type>
+        <code value="Extension" />
+        <profile value="http://hl7.org/fhir/5.0/StructureDefinition/extension-Encounter.plannedStartDate" />
+      </type>
+    </element>
+    <element id="Encounter.extension:plannedEndDate">
+      <path value="Encounter.extension" />
+      <sliceName value="plannedEndDate" />
+      <min value="0" />
+      <max value="1" />
+      <type>
+        <code value="Extension" />
+        <profile value="http://hl7.org/fhir/5.0/StructureDefinition/extension-Encounter.plannedEndDate" />
+      </type>
     </element>
     <element id="Encounter.identifier">
       <path value="Encounter.identifier" />
@@ -9370,11 +11015,83 @@
         </discriminator>
         <rules value="open" />
       </slicing>
+      <short>
+        <extension url="http://hl7.org/fhir/StructureDefinition/translation">
+          <extension url="lang">
+            <valueCode value="de-DE" />
+          </extension>
+          <extension url="content">
+            <valueString value="Identifikator" />
+          </extension>
+        </extension>
+        <extension url="http://hl7.org/fhir/StructureDefinition/translation">
+          <extension url="lang">
+            <valueCode value="en-US" />
+          </extension>
+          <extension url="content">
+            <valueString value="Identifier" />
+          </extension>
+        </extension>
+      </short>
+      <definition>
+        <extension url="http://hl7.org/fhir/StructureDefinition/translation">
+          <extension url="lang">
+            <valueCode value="de-DE" />
+          </extension>
+          <extension url="content">
+            <valueString value="Kennung/en, unter der/denen dieser Kontakt bekannt ist." />
+          </extension>
+        </extension>
+        <extension url="http://hl7.org/fhir/StructureDefinition/translation">
+          <extension url="lang">
+            <valueCode value="en-US" />
+          </extension>
+          <extension url="content">
+            <valueString value="Identifier/s by which this encounter is known." />
+          </extension>
+        </extension>
+      </definition>
       <mustSupport value="true" />
     </element>
     <element id="Encounter.identifier:Aufnahmenummer">
       <path value="Encounter.identifier" />
       <sliceName value="Aufnahmenummer" />
+      <short value="Aufnahmenummer">
+        <extension url="http://hl7.org/fhir/StructureDefinition/translation">
+          <extension url="lang">
+            <valueCode value="de-DE" />
+          </extension>
+          <extension url="content">
+            <valueString value="Aufnahmenummer" />
+          </extension>
+        </extension>
+        <extension url="http://hl7.org/fhir/StructureDefinition/translation">
+          <extension url="lang">
+            <valueCode value="en-US" />
+          </extension>
+          <extension url="content">
+            <valueString value="Admission number" />
+          </extension>
+        </extension>
+      </short>
+      <definition value="OPTIONAL, Aufnahmenummer/Fallnummer, die Patient:innen bei der Planung einer Aufnahme oder bei der Aufnahme selbst bekommt. &#xA;Generell SOLLTE die Aufnahmenummer in allen Encounter-Ressourcen unabhängig von der Kontaktebene und dem Kontakttyp angegeben werden. &#xA;Als Gründe würden dagegen sprechen, wenn die Aufnahmenummer nur in einem Encounter der Encounter-Hierarchie angegeben werden kann. &#xA;In diesem Fall SOLL auf die korrekte Encounter-Verlinkung über .partOf geachtet werden, &#xA;sowie dass jeder Encounter einen eigenständigen Identifier mit unterschiedlichen Systemen enthält.">
+        <extension url="http://hl7.org/fhir/StructureDefinition/translation">
+          <extension url="lang">
+            <valueCode value="de-DE" />
+          </extension>
+          <extension url="content">
+            <valueString value="Aufnahmenummer/Fallnummer, die Patient:in bei einer Aufnahme bekommt." />
+          </extension>
+        </extension>
+        <extension url="http://hl7.org/fhir/StructureDefinition/translation">
+          <extension url="lang">
+            <valueCode value="en-US" />
+          </extension>
+          <extension url="content">
+            <valueString value="Admission number, the patient receives during an admission." />
+          </extension>
+        </extension>
+      </definition>
       <min value="0" />
       <max value="1" />
       <patternIdentifier>
@@ -9446,6 +11163,42 @@
     </element>
     <element id="Encounter.status">
       <path value="Encounter.status" />
+      <short>
+        <extension url="http://hl7.org/fhir/StructureDefinition/translation">
+          <extension url="lang">
+            <valueCode value="de-DE" />
+          </extension>
+          <extension url="content">
+            <valueString value="Status" />
+          </extension>
+        </extension>
+        <extension url="http://hl7.org/fhir/StructureDefinition/translation">
+          <extension url="lang">
+            <valueCode value="en-US" />
+          </extension>
+          <extension url="content">
+            <valueString value="status" />
+          </extension>
+        </extension>
+      </short>
+      <definition value="VERPFLICHTEND, required Binding auf http://fhir.de/ValueSet/EncounterStatusDe">
+        <extension url="http://hl7.org/fhir/StructureDefinition/translation">
+          <extension url="lang">
+            <valueCode value="de-DE" />
+          </extension>
+          <extension url="content">
+            <valueString value="geplant | im Gange | beurlaubt | abgeschlossen | abgebrochen | fehlerhafte Eingabe | unbekannt" />
+          </extension>
+        </extension>
+        <extension url="http://hl7.org/fhir/StructureDefinition/translation">
+          <extension url="lang">
+            <valueCode value="en-US" />
+          </extension>
+          <extension url="content">
+            <valueString value="planned | in-progress | onleave | finished | cancelled | entered-in-error | unknown" />
+          </extension>
+        </extension>
+      </definition>
       <mustSupport value="true" />
       <binding>
         <strength value="required" />
@@ -9454,6 +11207,42 @@
     </element>
     <element id="Encounter.class">
       <path value="Encounter.class" />
+      <short value="Kontaktklasse">
+        <extension url="http://hl7.org/fhir/StructureDefinition/translation">
+          <extension url="lang">
+            <valueCode value="de-DE" />
+          </extension>
+          <extension url="content">
+            <valueString value="Kontaktklasse" />
+          </extension>
+        </extension>
+        <extension url="http://hl7.org/fhir/StructureDefinition/translation">
+          <extension url="lang">
+            <valueCode value="en-US" />
+          </extension>
+          <extension url="content">
+            <valueString value="Classification of patient encounter" />
+          </extension>
+        </extension>
+      </short>
+      <definition value="VERPFLICHTEND, Kontaktklasse. Required Binding auf http://fhir.de/ValueSet/EncounterClassDE. &#xA;Klassifizierung des Kontaktes in stationär, ambulant, teilstationär oder andere.">
+        <extension url="http://hl7.org/fhir/StructureDefinition/translation">
+          <extension url="lang">
+            <valueCode value="de-DE" />
+          </extension>
+          <extension url="content">
+            <valueString value="ambulant, stationär, vorstationär, virtuell, teilstationär, häusliche Pflege" />
+          </extension>
+        </extension>
+        <extension url="http://hl7.org/fhir/StructureDefinition/translation">
+          <extension url="lang">
+            <valueCode value="en-US" />
+          </extension>
+          <extension url="content">
+            <valueString value="ambulatory, inpatient encounter, pre-admission, virtual, short stay, home health" />
+          </extension>
+        </extension>
+      </definition>
       <mustSupport value="true" />
       <binding>
         <strength value="required" />
@@ -9469,11 +11258,83 @@
         </discriminator>
         <rules value="open" />
       </slicing>
+      <short>
+        <extension url="http://hl7.org/fhir/StructureDefinition/translation">
+          <extension url="lang">
+            <valueCode value="de-DE" />
+          </extension>
+          <extension url="content">
+            <valueString value="Typ des Kontaktes" />
+          </extension>
+        </extension>
+        <extension url="http://hl7.org/fhir/StructureDefinition/translation">
+          <extension url="lang">
+            <valueCode value="en-US" />
+          </extension>
+          <extension url="content">
+            <valueString value="Type of encounter" />
+          </extension>
+        </extension>
+      </short>
+      <definition>
+        <extension url="http://hl7.org/fhir/StructureDefinition/translation">
+          <extension url="lang">
+            <valueCode value="de-DE" />
+          </extension>
+          <extension url="content">
+            <valueString value="Spezifischer Typ des Kontaktes" />
+          </extension>
+        </extension>
+        <extension url="http://hl7.org/fhir/StructureDefinition/translation">
+          <extension url="lang">
+            <valueCode value="en-US" />
+          </extension>
+          <extension url="content">
+            <valueString value="Specific type of encounter" />
+          </extension>
+        </extension>
+      </definition>
       <mustSupport value="true" />
     </element>
     <element id="Encounter.type:Kontaktebene">
       <path value="Encounter.type" />
       <sliceName value="Kontaktebene" />
+      <short value="Kontaktebene">
+        <extension url="http://hl7.org/fhir/StructureDefinition/translation">
+          <extension url="lang">
+            <valueCode value="de-DE" />
+          </extension>
+          <extension url="content">
+            <valueString value="Kontaktebene" />
+          </extension>
+        </extension>
+        <extension url="http://hl7.org/fhir/StructureDefinition/translation">
+          <extension url="lang">
+            <valueCode value="en-US" />
+          </extension>
+          <extension url="content">
+            <valueString value="Level of encounter" />
+          </extension>
+        </extension>
+      </short>
+      <definition value="OPTIONAL, Unterscheidung der Kontakt-Hierarchieebenen Einrichtungskontakt, Abteilungskontakt, Versorgungsstellenkontakt. &#xA;Die Gliederung gilt für stationäre Kontakte. Required Binding auf http://fhir.de/ValueSet/kontaktebene-de">
+        <extension url="http://hl7.org/fhir/StructureDefinition/translation">
+          <extension url="lang">
+            <valueCode value="de-DE" />
+          </extension>
+          <extension url="content">
+            <valueString value="Unterscheidung der Kontakt-Hierarchieebenen: Einrichtungskontakt | Abteilungskontakt | Versorgungsstellenkontakt" />
+          </extension>
+        </extension>
+        <extension url="http://hl7.org/fhir/StructureDefinition/translation">
+          <extension url="lang">
+            <valueCode value="en-US" />
+          </extension>
+          <extension url="content">
+            <valueString value="Differentiation of the encounter hierarchy levels: facility contact | department contact | care provider contact" />
+          </extension>
+        </extension>
+      </definition>
       <min value="0" />
       <max value="1" />
       <patternCodeableConcept>
@@ -9491,6 +11352,42 @@
     <element id="Encounter.type:KontaktArt">
       <path value="Encounter.type" />
       <sliceName value="KontaktArt" />
+      <short value="Kontaktart">
+        <extension url="http://hl7.org/fhir/StructureDefinition/translation">
+          <extension url="lang">
+            <valueCode value="de-DE" />
+          </extension>
+          <extension url="content">
+            <valueString value="Kontaktart" />
+          </extension>
+        </extension>
+        <extension url="http://hl7.org/fhir/StructureDefinition/translation">
+          <extension url="lang">
+            <valueCode value="en-US" />
+          </extension>
+          <extension url="content">
+            <valueString value="Type of encounter" />
+          </extension>
+        </extension>
+      </short>
+      <definition value="OPTIONAL, Differenzierung zwischen verschiedenen Arten von Kontakten (z.B. vorstationär, nachstationär, intensivstationär). &#xA;Required Binding auf http://fhir.de/ValueSet/kontaktart-de">
+        <extension url="http://hl7.org/fhir/StructureDefinition/translation">
+          <extension url="lang">
+            <valueCode value="de-DE" />
+          </extension>
+          <extension url="content">
+            <valueString value="Kontaktarten wie vorstationär | nachstationär | intensivstationär" />
+          </extension>
+        </extension>
+        <extension url="http://hl7.org/fhir/StructureDefinition/translation">
+          <extension url="lang">
+            <valueCode value="en-US" />
+          </extension>
+          <extension url="content">
+            <valueString value="Type of encounter such as pre-admission | post-admission | intensive care" />
+          </extension>
+        </extension>
+      </definition>
       <min value="0" />
       <max value="1" />
       <patternCodeableConcept>
@@ -9506,6 +11403,42 @@
     </element>
     <element id="Encounter.serviceType">
       <path value="Encounter.serviceType" />
+      <short value="Fachabteilung">
+        <extension url="http://hl7.org/fhir/StructureDefinition/translation">
+          <extension url="lang">
+            <valueCode value="de-DE" />
+          </extension>
+          <extension url="content">
+            <valueString value="Fachabteilung" />
+          </extension>
+        </extension>
+        <extension url="http://hl7.org/fhir/StructureDefinition/translation">
+          <extension url="lang">
+            <valueCode value="en-US" />
+          </extension>
+          <extension url="content">
+            <valueString value="Department" />
+          </extension>
+        </extension>
+      </short>
+      <definition value="Die Fachdisziplin bzw. Fachabteilung wird durch einen vierstelligen Fachabteilungsschlüssel klassifiziert.">
+        <extension url="http://hl7.org/fhir/StructureDefinition/translation">
+          <extension url="lang">
+            <valueCode value="de-DE" />
+          </extension>
+          <extension url="content">
+            <valueString value="Fachabteilung Klassifizierung durch Fachabteilungsschlüssel" />
+          </extension>
+        </extension>
+        <extension url="http://hl7.org/fhir/StructureDefinition/translation">
+          <extension url="lang">
+            <valueCode value="en-US" />
+          </extension>
+          <extension url="content">
+            <valueString value="Department classification by department key" />
+          </extension>
+        </extension>
+      </definition>
       <mustSupport value="true" />
     </element>
     <element id="Encounter.serviceType.coding">
@@ -9522,6 +11455,8 @@
     <element id="Encounter.serviceType.coding:Fachabteilungsschluessel">
       <path value="Encounter.serviceType.coding" />
       <sliceName value="Fachabteilungsschluessel" />
+      <short value="Fachabteilungsschlüssel" />
+      <definition value="OPTIONAL, required Binding auf http://fhir.de/ValueSet/dkgev/Fachabteilungsschluessel&#xA;Fachabteilungen gemäß Anhang 1 der BPflV in der am 31.12.2003 geltenden Fassung" />
       <min value="0" />
       <max value="1" />
       <patternCoding>
@@ -9529,7 +11464,7 @@
       </patternCoding>
       <mustSupport value="true" />
       <binding>
-        <strength value="extensible" />
+        <strength value="required" />
         <valueSet value="http://fhir.de/ValueSet/dkgev/Fachabteilungsschluessel" />
       </binding>
     </element>
@@ -9543,71 +11478,236 @@
       <min value="1" />
       <mustSupport value="true" />
     </element>
+    <element id="Encounter.serviceType.coding:ErweiterterFachabteilungsschluessel">
+      <path value="Encounter.serviceType.coding" />
+      <sliceName value="ErweiterterFachabteilungsschluessel" />
+      <short value="Erweiterter Fachabteilungsschlüssel" />
+      <definition value="OPTIONAL, required Binding auf http://fhir.de/ValueSet/dkgev/Fachabteilungsschluessel-erweitert&#xA;Fachabteilungen gemäß Anhang 1 der BPflV in der am 31.12.2003 geltenden Fassung inkl. Spezialisierungen." />
+      <min value="0" />
+      <max value="1" />
+      <patternCoding>
+        <system value="http://fhir.de/CodeSystem/dkgev/Fachabteilungsschluessel-erweitert" />
+      </patternCoding>
+      <mustSupport value="true" />
+      <binding>
+        <strength value="required" />
+        <valueSet value="http://fhir.de/ValueSet/dkgev/Fachabteilungsschluessel-erweitert" />
+      </binding>
+    </element>
+    <element id="Encounter.serviceType.coding:ErweiterterFachabteilungsschluessel.system">
+      <path value="Encounter.serviceType.coding.system" />
+      <min value="1" />
+      <mustSupport value="true" />
+    </element>
+    <element id="Encounter.serviceType.coding:ErweiterterFachabteilungsschluessel.code">
+      <path value="Encounter.serviceType.coding.code" />
+      <min value="1" />
+      <mustSupport value="true" />
+    </element>
     <element id="Encounter.subject">
       <path value="Encounter.subject" />
+      <short value="Patientenidentifikator" />
+      <definition value="VERPFLICHTEND, Referenz auf Patient:in." />
       <min value="1" />
-      <type>
-        <code value="Reference" />
-        <profile value="https://www.medizininformatik-initiative.de/fhir/core/StructureDefinition/MII-Reference" />
-        <targetProfile value="http://hl7.org/fhir/StructureDefinition/Patient" />
-        <targetProfile value="http://hl7.org/fhir/StructureDefinition/Group" />
-      </type>
       <mustSupport value="true" />
     </element>
     <element id="Encounter.period">
       <path value="Encounter.period" />
-      <min value="1" />
+      <short value="Zeitraum des Kontaktes">
+        <extension url="http://hl7.org/fhir/StructureDefinition/translation">
+          <extension url="lang">
+            <valueCode value="de-DE" />
+          </extension>
+          <extension url="content">
+            <valueString value="Zeitraum des Kontaktes" />
+          </extension>
+        </extension>
+        <extension url="http://hl7.org/fhir/StructureDefinition/translation">
+          <extension url="lang">
+            <valueCode value="en-US" />
+          </extension>
+          <extension url="content">
+            <valueString value="Period of encounter" />
+          </extension>
+        </extension>
+      </short>
+      <definition value="Beginn- und Endzeitpunkt des Kontaktes. &#xA;    DARF NICHT vorhanden sein, kann OPTIONAL oder VERPFLICHTEND sein, &#xA;    abhängig vom Status des Kontaktes - siehe Invarianten auf Ebene Encounter.">
+        <extension url="http://hl7.org/fhir/StructureDefinition/translation">
+          <extension url="lang">
+            <valueCode value="de-DE" />
+          </extension>
+          <extension url="content">
+            <valueString value="Beginn- und Endzeitpunkt des Kontaktes." />
+          </extension>
+        </extension>
+        <extension url="http://hl7.org/fhir/StructureDefinition/translation">
+          <extension url="lang">
+            <valueCode value="en-US" />
+          </extension>
+          <extension url="content">
+            <valueString value="Start and end time of the encounter." />
+          </extension>
+        </extension>
+      </definition>
       <mustSupport value="true" />
     </element>
     <element id="Encounter.period.start">
       <path value="Encounter.period.start" />
-      <min value="1" />
+      <short value="Beginndatum" />
+      <definition value="Start des Kontaktzeitraums. DARF NICHT vorhanden sein, kann OPTIONAL oder VERPFLICHTEND sein, &#xA;abhängig vom Status des Kontaktes - siehe Invarianten auf Ebene Encounter." />
       <mustSupport value="true" />
     </element>
     <element id="Encounter.period.end">
       <path value="Encounter.period.end" />
+      <short value="Enddatum" />
+      <definition value="Ende des Kontaktzeitraums. DARF NICHT vorhanden sein, kann OPTIONAL oder VERPFLICHTEND sein, &#xA;abhängig vom Status des Kontaktes - siehe Invarianten auf Ebene Encounter." />
       <mustSupport value="true" />
     </element>
     <element id="Encounter.diagnosis">
       <path value="Encounter.diagnosis" />
+      <short value="Diagnosen">
+        <extension url="http://hl7.org/fhir/StructureDefinition/translation">
+          <extension url="lang">
+            <valueCode value="de-DE" />
+          </extension>
+          <extension url="content">
+            <valueString value="Diagnosen" />
+          </extension>
+        </extension>
+        <extension url="http://hl7.org/fhir/StructureDefinition/translation">
+          <extension url="lang">
+            <valueCode value="en-US" />
+          </extension>
+          <extension url="content">
+            <valueString value="Diagnoses" />
+          </extension>
+        </extension>
+      </short>
+      <definition value="OPTIONAL, Angaben zu Diagnosen">
+        <extension url="http://hl7.org/fhir/StructureDefinition/translation">
+          <extension url="lang">
+            <valueCode value="de-DE" />
+          </extension>
+          <extension url="content">
+            <valueString value="Angaben zu für den Kontakt relevanten Diagnosen" />
+          </extension>
+        </extension>
+        <extension url="http://hl7.org/fhir/StructureDefinition/translation">
+          <extension url="lang">
+            <valueCode value="en-US" />
+          </extension>
+          <extension url="content">
+            <valueString value="Information about diagnoses relevant for the encounter" />
+          </extension>
+        </extension>
+      </definition>
       <mustSupport value="true" />
     </element>
     <element id="Encounter.diagnosis.condition">
       <path value="Encounter.diagnosis.condition" />
-      <type>
-        <code value="Reference" />
-        <profile value="https://www.medizininformatik-initiative.de/fhir/core/StructureDefinition/MII-Reference" />
-        <targetProfile value="http://hl7.org/fhir/StructureDefinition/Condition" />
-        <targetProfile value="http://hl7.org/fhir/StructureDefinition/Procedure" />
-      </type>
+      <short value="Referenz zu Diagnose-Ressource" />
+      <definition value="VERPFLICHTEND, wenn Diagnosedaten angegeben werden, dann MUSS diese referenziert werden. &#xA;Es SOLLTE nur die Primärdiagnose referenziert werden." />
       <mustSupport value="true" />
     </element>
     <element id="Encounter.diagnosis.use">
       <path value="Encounter.diagnosis.use" />
+      <short value="Diagnosetyp" />
+      <definition value="Attribute wie Aufnahme- oder Entlassdiagnose sind immer im Kontext eines stationären Aufenthaltes zu betrachten&#xA;und werden daher als Eigenschaft des Encounters modelliert. &#xA;VERPFLICHTEND mindestens die Angabe eines Codings. EMPFOHLEN ist die Angabe mittels Diagnosetyp- und DiagnosesubTyp-Coding. &#xA;Weitere Codings OPTIONAL. Extensible Binding auf `http://hl7.org/fhir/ValueSet/diagnosis-role`" />
       <min value="1" />
       <mustSupport value="true" />
       <binding>
-        <extension url="http://hl7.org/fhir/StructureDefinition/elementdefinition-bindingName">
-          <valueString value="DiagnosisRole" />
-        </extension>
-        <extension url="http://hl7.org/fhir/StructureDefinition/elementdefinition-isCommonBinding">
-          <valueBoolean value="true" />
-        </extension>
         <strength value="extensible" />
-        <description value="The type of diagnosis this condition represents." />
-        <valueSet value="http://hl7.org/fhir/ValueSet/diagnosis-role" />
+        <valueSet value="https://www.medizininformatik-initiative.de/fhir/core/modul-fall/ValueSet/mii-vs-fall-diagnosis-use" />
+      </binding>
+    </element>
+    <element id="Encounter.diagnosis.use.coding">
+      <path value="Encounter.diagnosis.use.coding" />
+      <slicing>
+        <discriminator>
+          <type value="pattern" />
+          <path value="$this" />
+        </discriminator>
+        <rules value="open" />
+      </slicing>
+      <min value="1" />
+      <mustSupport value="true" />
+    </element>
+    <element id="Encounter.diagnosis.use.coding:Diagnosetyp">
+      <path value="Encounter.diagnosis.use.coding" />
+      <sliceName value="Diagnosetyp" />
+      <short value="Diagnosetyp" />
+      <definition value="Einweisungs-/Überweisungsdiagnose | Behandlungsrelevante Diagnosen" />
+      <min value="0" />
+      <max value="1" />
+      <mustSupport value="true" />
+      <binding>
+        <strength value="required" />
+        <valueSet value="http://fhir.de/ValueSet/DiagnoseTyp" />
+      </binding>
+    </element>
+    <element id="Encounter.diagnosis.use.coding:DiagnosesubTyp">
+      <path value="Encounter.diagnosis.use.coding" />
+      <sliceName value="DiagnosesubTyp" />
+      <short value="Diagnosesubtyp" />
+      <definition value="Operationsdiagnose | Abteilung Hauptdiagnose | Todesursache | Infektionsschutzdiagnose +" />
+      <min value="0" />
+      <max value="1" />
+      <mustSupport value="true" />
+      <binding>
+        <strength value="required" />
+        <valueSet value="http://fhir.de/ValueSet/Diagnosesubtyp" />
       </binding>
     </element>
     <element id="Encounter.diagnosis.rank">
       <path value="Encounter.diagnosis.rank" />
+      <short value="Rangfolge" />
+      <definition value="OPTIONAL, Rangfolge der Diagnose" />
       <mustSupport value="true" />
     </element>
     <element id="Encounter.hospitalization">
       <path value="Encounter.hospitalization" />
+      <short value="Klinikaufenthalt">
+        <extension url="http://hl7.org/fhir/StructureDefinition/translation">
+          <extension url="lang">
+            <valueCode value="de-DE" />
+          </extension>
+          <extension url="content">
+            <valueString value="Klinikaufenthalt" />
+          </extension>
+        </extension>
+        <extension url="http://hl7.org/fhir/StructureDefinition/translation">
+          <extension url="lang">
+            <valueCode value="en-US" />
+          </extension>
+          <extension url="content">
+            <valueString value="Hospitalization" />
+          </extension>
+        </extension>
+      </short>
+      <definition value="OPTIONAL, Details zur Aufnahme und Entlassung">
+        <extension url="http://hl7.org/fhir/StructureDefinition/translation">
+          <extension url="lang">
+            <valueCode value="de-DE" />
+          </extension>
+          <extension url="content">
+            <valueString value="Details zur Aufnahme und Entlassung" />
+          </extension>
+        </extension>
+        <extension url="http://hl7.org/fhir/StructureDefinition/translation">
+          <extension url="lang">
+            <valueCode value="en-US" />
+          </extension>
+          <extension url="content">
+            <valueString value="Details about admission and discharge" />
+          </extension>
+        </extension>
+      </definition>
       <mustSupport value="true" />
     </element>
     <element id="Encounter.hospitalization.admitSource">
       <path value="Encounter.hospitalization.admitSource" />
+      <short value="Aufnahmeanlass" />
+      <definition value="VERPFLICHTEND, Aufnahmeanlass. Preferred Binding auf http://fhir.de/ValueSet/dgkev/Aufnahmeanlass" />
       <min value="1" />
       <mustSupport value="true" />
       <binding>
@@ -9617,11 +11717,15 @@
     </element>
     <element id="Encounter.hospitalization.dischargeDisposition">
       <path value="Encounter.hospitalization.dischargeDisposition" />
+      <short value="Entlassung" />
+      <definition value="OPTIONAL Daten zur Entlassung" />
       <mustSupport value="true" />
     </element>
     <element id="Encounter.hospitalization.dischargeDisposition.extension:Entlassungsgrund">
       <path value="Encounter.hospitalization.dischargeDisposition.extension" />
       <sliceName value="Entlassungsgrund" />
+      <short value="Entlassungsgrund" />
+      <definition value="OPTIONAL, Entlassungs-/Verlegungsgrund nach § 301 Abs. 3 SGB V" />
       <min value="0" />
       <max value="1" />
       <type>
@@ -9639,10 +11743,48 @@
         </discriminator>
         <rules value="open" />
       </slicing>
+      <short value="Kontaktort">
+        <extension url="http://hl7.org/fhir/StructureDefinition/translation">
+          <extension url="lang">
+            <valueCode value="de-DE" />
+          </extension>
+          <extension url="content">
+            <valueString value="Kontaktort" />
+          </extension>
+        </extension>
+        <extension url="http://hl7.org/fhir/StructureDefinition/translation">
+          <extension url="lang">
+            <valueCode value="en-US" />
+          </extension>
+          <extension url="content">
+            <valueString value="Location" />
+          </extension>
+        </extension>
+      </short>
+      <definition value="OPTIONAL, Details zum Kontaktort wie Zimmer, Bett, Station">
+        <extension url="http://hl7.org/fhir/StructureDefinition/translation">
+          <extension url="lang">
+            <valueCode value="de-DE" />
+          </extension>
+          <extension url="content">
+            <valueString value="Details zum Kontaktort wie Zimmer, Bett, Station" />
+          </extension>
+        </extension>
+        <extension url="http://hl7.org/fhir/StructureDefinition/translation">
+          <extension url="lang">
+            <valueCode value="en-US" />
+          </extension>
+          <extension url="content">
+            <valueString value="Details about location such as room, bed, ward" />
+          </extension>
+        </extension>
+      </definition>
       <mustSupport value="true" />
     </element>
     <element id="Encounter.location.physicalType">
       <path value="Encounter.location.physicalType" />
+      <short value="Kontaktorttyp" />
+      <definition value="SOLL, extensible Binding auf https://www.medizininformatik-initiative.de/fhir/core/modul-fall/ValueSet/location-physical-type" />
       <binding>
         <strength value="extensible" />
         <valueSet value="https://www.medizininformatik-initiative.de/fhir/core/modul-fall/ValueSet/location-physical-type" />
@@ -9651,6 +11793,8 @@
     <element id="Encounter.location:Zimmer">
       <path value="Encounter.location" />
       <sliceName value="Zimmer" />
+      <short value="Zimmer" />
+      <definition value="Von Patient oder Patientin während des Kontaktes belegtes Zimmer auf einer Station." />
       <min value="0" />
       <max value="1" />
       <mustSupport value="true" />
@@ -9683,6 +11827,8 @@
     <element id="Encounter.location:Bett">
       <path value="Encounter.location" />
       <sliceName value="Bett" />
+      <short value="Bett" />
+      <definition value="Von Patient oder Patientin während des Kontaktes belegter Bettenstellplatz." />
       <min value="0" />
       <max value="1" />
       <mustSupport value="true" />
@@ -9715,6 +11861,8 @@
     <element id="Encounter.location:Station">
       <path value="Encounter.location" />
       <sliceName value="Station" />
+      <short value="Station" />
+      <definition value="Die Station, auf welcher der Patient oder die Patientin während des Kontaktes behandelt wurde." />
       <min value="0" />
       <max value="1" />
       <mustSupport value="true" />
@@ -9746,10 +11894,82 @@
     </element>
     <element id="Encounter.serviceProvider">
       <path value="Encounter.serviceProvider" />
+      <short value="Leistungserbringer">
+        <extension url="http://hl7.org/fhir/StructureDefinition/translation">
+          <extension url="lang">
+            <valueCode value="de-DE" />
+          </extension>
+          <extension url="content">
+            <valueString value="Leistungserbringer" />
+          </extension>
+        </extension>
+        <extension url="http://hl7.org/fhir/StructureDefinition/translation">
+          <extension url="lang">
+            <valueCode value="en-US" />
+          </extension>
+          <extension url="content">
+            <valueString value="Service Provider" />
+          </extension>
+        </extension>
+      </short>
+      <definition value="OPTIONAL. Leistungserbringer, der für den Kontakt verantwortlich ist. &#xA;Referenz auf eine Organisation">
+        <extension url="http://hl7.org/fhir/StructureDefinition/translation">
+          <extension url="lang">
+            <valueCode value="de-DE" />
+          </extension>
+          <extension url="content">
+            <valueString value="Leistungserbringer, der für den Kontakt verantwortlich ist." />
+          </extension>
+        </extension>
+        <extension url="http://hl7.org/fhir/StructureDefinition/translation">
+          <extension url="lang">
+            <valueCode value="en-US" />
+          </extension>
+          <extension url="content">
+            <valueString value="Service provider responsible for the encounter." />
+          </extension>
+        </extension>
+      </definition>
       <mustSupport value="true" />
     </element>
     <element id="Encounter.partOf">
       <path value="Encounter.partOf" />
+      <short value="Teil von Kontakt">
+        <extension url="http://hl7.org/fhir/StructureDefinition/translation">
+          <extension url="lang">
+            <valueCode value="de-DE" />
+          </extension>
+          <extension url="content">
+            <valueString value="Teil von Kontakt" />
+          </extension>
+        </extension>
+        <extension url="http://hl7.org/fhir/StructureDefinition/translation">
+          <extension url="lang">
+            <valueCode value="en-US" />
+          </extension>
+          <extension url="content">
+            <valueString value="Part of encounter" />
+          </extension>
+        </extension>
+      </short>
+      <definition value="OPTIONAL. Abbildung der Hierarchie zwischen Kontaktebenen durch Referenz auf weitere Kontakte, &#xA;wenn bspw. ein Versorgungsstellenkontakt Teil eines Abteilungskontaktes &#xA;oder ein Abteilungskontakt Teil eines Einrichtungskontaktes ist.">
+        <extension url="http://hl7.org/fhir/StructureDefinition/translation">
+          <extension url="lang">
+            <valueCode value="de-DE" />
+          </extension>
+          <extension url="content">
+            <valueString value="Abbildung der Hierarchie zwischen Kontaktebenen durch Referenz auf weitere Kontakte." />
+          </extension>
+        </extension>
+        <extension url="http://hl7.org/fhir/StructureDefinition/translation">
+          <extension url="lang">
+            <valueCode value="en-US" />
+          </extension>
+          <extension url="content">
+            <valueString value="Hierarchy between encounter levels by referencing further encounters." />
+          </extension>
+        </extension>
+      </definition>
       <mustSupport value="true" />
     </element>
   </differential>
