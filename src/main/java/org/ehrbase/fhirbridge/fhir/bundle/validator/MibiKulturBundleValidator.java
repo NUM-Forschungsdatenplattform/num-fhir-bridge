@@ -64,7 +64,7 @@ public class MibiKulturBundleValidator extends AbstractBundleValidator {
             }
 
         } catch (IndexOutOfBoundsException e) {
-            throw new UnprocessableEntityException("Make sure only the for Mibi Kultur supported Profiles are contained in the Bundle these are: Kultur, Empfindlichkeit, MRGN or MRE, Specimen");
+            throw new UnprocessableEntityException("Make sure the Mibi Kultur supported Profiles are contained in the Bundle these are: Kultur, Empfindlichkeit, MRGN or MRE, Specimen");
         }
     }
 
@@ -75,7 +75,7 @@ public class MibiKulturBundleValidator extends AbstractBundleValidator {
                 throw new UnprocessableEntityException("Make sure the Mibi Kultur supported Profiles are contained in the Bundle these are: Kultur, Empfindlichkeit, MRGN or MRE, Specimen");
             }
         } else {
-            throw new UnprocessableEntityException("Make sure only the for Mibi Kultur supported Profiles are contained in the Bundle these are: Kultur, Empfindlichkeit, MRGN or MRE, Specimen");
+            throw new UnprocessableEntityException("Make sure the Mibi Kultur supported Profiles are contained in the Bundle these are: Kultur, Empfindlichkeit, MRGN or MRE, Specimen");
         }
     }
 

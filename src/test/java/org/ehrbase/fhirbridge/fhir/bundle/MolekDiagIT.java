@@ -17,6 +17,7 @@ import org.ehrbase.fhirbridge.ehr.opt.virologischerbefundcomposition.definition.
 import org.ehrbase.fhirbridge.ehr.opt.virologischerbefundcomposition.definition.ProbeCluster;
 import org.ehrbase.fhirbridge.fhir.AbstractBundleMappingTestSetupIT;
 import org.ehrbase.fhirbridge.fhir.bundle.converter.MolekDiagBundleConverter;
+import org.ehrbase.fhirbridge.fhir.bundle.validator.MolekDiagBundleValidator;
 import org.hl7.fhir.r4.model.Bundle;
 import org.hl7.fhir.r4.model.Observation;
 import org.javers.core.Javers;
@@ -54,6 +55,28 @@ class MolekDiagIT extends AbstractBundleMappingTestSetupIT {
         testMapping("create-molek-diag.json", "paragon-create-molek-diag.json");
     }
 
+    @Test
+    void invalidSpecimenMissing() throws IOException {
+        Exception exception = executeValidatorException("invalid-specimen-missing.json");
+        assertEquals("Make sure only the for Mibi Molekular Diagnostik supported Profiles are contained in the Bundle these are: Molek Diagn Organismus Nachweis, Specimen", exception.getMessage());
+
+    }
+
+    @Test
+    void invalidMolekDiagMissing() throws IOException {
+        Exception exception = executeValidatorException("invalid-molekdiag-missing.json");
+        assertEquals("Make sure only the for Mibi Molekular Diagnostik supported Profiles are contained in the Bundle these are: Molek Diagn Organismus Nachweis, Specimen", exception.getMessage());
+
+    }
+
+
+    @Test
+    void invalidDuplicate() throws IOException {
+        Exception exception = executeValidatorException("invalid-duplicate-molek.json");
+        assertEquals("Make sure only the for Mibi Molekular Diagnostik supported Profiles are contained in the Bundle these are: Molek Diagn Organismus Nachweis, Specimen", exception.getMessage());
+
+    }
+
     @Override
     public Javers getJavers() {
         return JaversBuilder.javers()
@@ -80,6 +103,13 @@ class MolekDiagIT extends AbstractBundleMappingTestSetupIT {
         Bundle bundle = (Bundle) testFileLoader.loadResource(path);
         return assertThrows(Exception.class, () -> {
             new MibiMolekDiagnostikConverter().convert(new MolekDiagBundleConverter().convert(bundle));
+        });
+    }
+
+    public Exception executeValidatorException(String path) throws IOException {
+        Bundle bundle = (Bundle) testFileLoader.loadResource(path);
+        return assertThrows(Exception.class, () -> {
+            new MolekDiagBundleValidator().validateRequest(bundle, null);
         });
     }
 

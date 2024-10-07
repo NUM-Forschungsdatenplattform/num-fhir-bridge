@@ -53,6 +53,36 @@ class MibiKulturIT extends AbstractBundleMappingTestSetupIT {
         testMapping("create-mrgn.json", "paragon-create-mrgn.json");
     }
 
+    @Test
+    void createInvalidMissingEmpfindlichkeit() throws IOException {
+        Exception exception = executeValidatorException("invalid-empfindlichkeit-missing.json");
+        assertEquals("Make sure the Mibi Kultur supported Profiles are contained in the Bundle these are: Kultur, Empfindlichkeit, MRGN or MRE, Specimen", exception.getMessage());
+    }
+
+    @Test
+    void createInvalidMissingKultur() throws IOException {
+        Exception exception = executeValidatorException("invalid-kultur-missing.json");
+        assertEquals("Make sure the Mibi Kultur supported Profiles are contained in the Bundle these are: Kultur, Empfindlichkeit, MRGN or MRE, Specimen", exception.getMessage());
+    }
+
+    @Test
+    void createInvalidMissingMREMRGN() throws IOException {
+        Exception exception = executeValidatorException("invalid-mremrgn-missing.json");
+        assertEquals("Make sure the Mibi Kultur supported Profiles are contained in the Bundle these are: Kultur, Empfindlichkeit, MRGN or MRE, Specimen", exception.getMessage());
+    }
+
+    @Test
+    void createInvalidMissingSpecimen() throws IOException {
+        Exception exception = executeValidatorException("invalid-specimen-missing.json");
+        assertEquals("Make sure the Mibi Kultur supported Profiles are contained in the Bundle these are: Kultur, Empfindlichkeit, MRGN or MRE, Specimen", exception.getMessage());
+    }
+
+    @Test
+    void createInvalidDuplicate() throws IOException {
+        Exception exception = executeValidatorException("invalid-duplicate.json");
+        assertEquals("Make sure only the for Mibi Kultur supported Profiles are contained and no duplicates in the Bundle these are: Kultur, Empfindlichkeit, MRGN or MRE, Specimen", exception.getMessage());
+    }
+
     @Override
     public Javers getJavers() {
         return JaversBuilder.javers()
