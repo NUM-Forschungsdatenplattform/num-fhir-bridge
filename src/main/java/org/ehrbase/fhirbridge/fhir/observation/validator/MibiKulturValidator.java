@@ -74,7 +74,6 @@ public class MibiKulturValidator implements FhirTransactionValidator {
     }
 
     private void checkContained(Observation observation) {
-
         if (observation.hasContained()) {
             checkForExistenceOfMREMRGNAndEmpfindlichkeit(observation);
         } else {

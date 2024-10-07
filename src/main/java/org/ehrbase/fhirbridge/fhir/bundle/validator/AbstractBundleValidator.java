@@ -48,6 +48,9 @@ public abstract class AbstractBundleValidator implements FhirTransactionValidato
             Observation observation = (Observation) entry.getResource();
             if (!observation.getHasMember().isEmpty()) {
                 memberValidator.setHasMembersList(observation.getHasMember());
+                if (!observation.getSpecimen().isEmpty()) {
+                    memberValidator.addSpecimenMember(observation.getSpecimen());
+                }
                 memberValidator.deleteFullUrl(entry.getFullUrl()); //Since the Observation is not a Member of itself
             }
         }

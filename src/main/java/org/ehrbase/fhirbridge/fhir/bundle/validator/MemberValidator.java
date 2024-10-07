@@ -37,6 +37,10 @@ class MemberValidator {
         }
     }
 
+    void addSpecimenMember(Reference reference) {
+        hasMembersList.add(reference.getReference());
+    }
+
     boolean memberListNotAlreadySet() {
         return this.hasMembersList.size() == 0;
     }
