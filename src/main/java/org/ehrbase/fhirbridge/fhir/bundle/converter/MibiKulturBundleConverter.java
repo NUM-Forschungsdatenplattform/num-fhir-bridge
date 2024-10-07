@@ -12,7 +12,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-public class MibiBundleConverter extends AbstractBundleConverter<Observation>{
+public class MibiKulturBundleConverter extends AbstractBundleConverter<Observation>{
     @Override
     public Observation convert(@NonNull Bundle bundle) {
         Observation observation = getRoot(bundle, Profile.MIBI_KULTUR);

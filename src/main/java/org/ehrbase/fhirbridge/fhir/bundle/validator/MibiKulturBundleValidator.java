@@ -5,7 +5,7 @@ import org.hl7.fhir.r4.model.Bundle;
 
 import java.util.Map;
 
-public class MIBIKulturBundleValidator extends AbstractBundleValidator{
+public class MibiKulturBundleValidator extends AbstractBundleValidator {
     private static final String MIBI_KULTUR_URL = "https://www.medizininformatik-initiative.de/fhir/modul-mikrobio/StructureDefinition/mii-pr-mikrobio-kultur-nachweis";
     private static final String EMPFINDLICHKEIT_URL = "https://www.medizininformatik-initiative.de/fhir/modul-mikrobio/StructureDefinition/mii-pr-mikrobio-empfindlichkeit";
     private static final String MRGN_URL = "https://www.medizininformatik-initiative.de/fhir/modul-mikrobio/StructureDefinition/mii-pr-mikrobio-mrgn-klasse";
@@ -14,9 +14,9 @@ public class MIBIKulturBundleValidator extends AbstractBundleValidator{
 
     private int mibiKulturContained = 0;
     private int empfindlichkeitContained = 0;
-    private int mrgnContained  = 0;
-    private int mreContained  = 0;
-    private int specimenContained  = 0;
+    private int mrgnContained = 0;
+    private int mreContained = 0;
+    private int specimenContained = 0;
 
     @Override
     public void validateRequest(Object bundle, Map<String, Object> parameters) {
@@ -29,7 +29,7 @@ public class MIBIKulturBundleValidator extends AbstractBundleValidator{
         for (Bundle.BundleEntryComponent entry : bundle.getEntry()) {
             validateProfiles(entry);
         }
-        checkIfAtLeastOneObservationContained();
+        checkForMandatoryProfiles();
     }
 
     private void resetAttributes() {
@@ -69,14 +69,14 @@ public class MIBIKulturBundleValidator extends AbstractBundleValidator{
     }
 
 
-    private void checkIfAtLeastOneObservationContained() {
-        if (!checkIfOneProfileIsPresent()) {
+    private void checkForMandatoryProfiles() {
+        if (mibiKulturContained == 1 && empfindlichkeitContained == 1 && specimenContained == 1) {
+            if (mrgnContained == 0 || mreContained == 0) {
+                throw new UnprocessableEntityException("Make sure the Mibi Kultur supported Profiles are contained in the Bundle these are: Kultur, Empfindlichkeit, MRGN or MRE, Specimen");
+            }
+        } else {
             throw new UnprocessableEntityException("Make sure only the for Mibi Kultur supported Profiles are contained in the Bundle these are: Kultur, Empfindlichkeit, MRGN or MRE, Specimen");
         }
-    }
-
-    private boolean checkIfOneProfileIsPresent() {
-        return oxygenPartialProfilesContained == 1 || carbonDioxideProfilesContained == 1 || phProfilesContained == 1 || oxygenSaturationProfilesContained == 1;
     }
 
     private void setMIBIKultur() {
