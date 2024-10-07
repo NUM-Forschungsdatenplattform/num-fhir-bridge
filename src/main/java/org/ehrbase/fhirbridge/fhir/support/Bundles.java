@@ -18,6 +18,9 @@ public class Bundles {
             if (Resources.hasProfile(entry.getResource(), Profile.MIBI_KULTUR)) {
                 return Optional.of(Profile.MIBI_KULTUR);
             }
+            if (Resources.hasProfile(entry.getResource(), Profile.MIBI_MOLEKULARE_DIAGNOSTIC)) {
+                return Optional.of(Profile.MIBI_MOLEKULARE_DIAGNOSTIC);
+            }
             if (Resources.hasProfile(entry.getResource(), Profile.ANTI_BODY_PANEL)) {
                 return Optional.of(Profile.ANTI_BODY_PANEL);
             }
