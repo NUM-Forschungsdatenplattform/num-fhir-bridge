@@ -17,21 +17,7 @@ public class AntiBodyPanelConverter extends AbstractBundleConverter<Observation>
     @Override
     public Observation convert(@NonNull Bundle bundle) {
         Observation observation = getRoot(bundle, Profile.ANTI_BODY_PANEL);
-        Map<String, Resource> resources = mapResources(bundle);
-
-        List<Resource> contains = new ArrayList<>();
-        for (Reference reference : observation.getHasMember()) {
-            Resource resource = resources.get(reference.getReference());
-            if (resource == null) {
-                throw new UnprocessableEntityException("Resource '" + reference.getReference() + "' is missing");
-            }
-
-            resource.setId((String) null);
-            reference.setReference(null);
-            reference.setResource(resource);
-            contains.add(resource);
-        }
-
+        List<Resource> contains = generateContains(bundle, observation.getHasMember());
         observation.setContained(contains);
         return observation;
     }

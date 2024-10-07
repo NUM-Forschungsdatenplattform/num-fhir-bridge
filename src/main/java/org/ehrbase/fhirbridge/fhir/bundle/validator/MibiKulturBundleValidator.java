@@ -71,7 +71,7 @@ public class MibiKulturBundleValidator extends AbstractBundleValidator {
 
     private void checkForMandatoryProfiles() {
         if (mibiKulturContained == 1 && empfindlichkeitContained == 1 && specimenContained == 1) {
-            if (mrgnContained == 0 || mreContained == 0) {
+            if (mrgnContained == 0 && mreContained == 0) {
                 throw new UnprocessableEntityException("Make sure the Mibi Kultur supported Profiles are contained in the Bundle these are: Kultur, Empfindlichkeit, MRGN or MRE, Specimen");
             }
         } else {
