@@ -24,7 +24,7 @@ import org.ehrbase.fhirbridge.camel.processor.ITI65Processor;
 import org.ehrbase.fhirbridge.fhir.bundle.converter.AntiBodyPanelConverter;
 import org.ehrbase.fhirbridge.fhir.bundle.converter.BloodGasPanelConverter;
 import org.ehrbase.fhirbridge.fhir.bundle.converter.DiagnosticReportLabConverter;
-import org.ehrbase.fhirbridge.fhir.bundle.converter.MibiBundleConverter;
+import org.ehrbase.fhirbridge.fhir.bundle.converter.MibiKulturBundleConverter;
 import org.ehrbase.fhirbridge.fhir.bundle.converter.UCCAppProDatenBundleConverter;
 import org.ehrbase.fhirbridge.fhir.bundle.converter.UCCSensordatenActivityBundleConverter;
 import org.ehrbase.fhirbridge.fhir.bundle.converter.UCCSensordatenVitalSignsBundleConverter;
@@ -33,7 +33,7 @@ import org.ehrbase.fhirbridge.fhir.bundle.validator.AntiBodyPanelBundleValidator
 import org.ehrbase.fhirbridge.fhir.bundle.validator.BloodGasPanelBundleValidator;
 import org.ehrbase.fhirbridge.fhir.bundle.validator.DiagnosticReportLabBundleValidator;
 import org.ehrbase.fhirbridge.fhir.bundle.validator.Iti65BundleValidator;
-import org.ehrbase.fhirbridge.fhir.bundle.validator.MIBIKulturBundleValidator;
+import org.ehrbase.fhirbridge.fhir.bundle.validator.MibiKulturBundleValidator;
 import org.ehrbase.fhirbridge.fhir.bundle.validator.UCCAppProDatenValidator;
 import org.ehrbase.fhirbridge.fhir.bundle.validator.UCCSensorDatenValidator;
 import org.ehrbase.fhirbridge.fhir.bundle.validator.VirologischerBefundBundleValidator;
@@ -79,9 +79,9 @@ public class TransactionRouteBuilder extends AbstractRouteBuilder {
                         .bean(AntiBodyPanelBundleValidator.class)
                         .bean(AntiBodyPanelConverter.class, "convert")
                     .when(header(CamelConstants.PROFILE).isEqualTo(Profile.MIBI_KULTUR))
-                        .bean(MIBIKulturBundleValidator.class)
-                        .bean(MibiBundleConverter.class, "convert")
-                .when(header(CamelConstants.PROFILE).isEqualTo(Profile.BLOOD_GAS_PANEL))
+                        .bean(MibiKulturBundleValidator.class)
+                        .bean(MibiKulturBundleConverter.class, "convert")
+                    .when(header(CamelConstants.PROFILE).isEqualTo(Profile.BLOOD_GAS_PANEL))
                         .bean(BloodGasPanelBundleValidator.class)
                         .bean(BloodGasPanelConverter.class, "convert")
                     .when(header(CamelConstants.PROFILE).isEqualTo(Profile.DIAGNOSTIC_REPORT_LAB))
