@@ -15,11 +15,14 @@ public class StationaererVersorgungsfallCompositionConverter extends EncounterTo
 
         retVal.setFalltypValue(KontaktebeneDefiningCode.EINRICHTUNGS_KONTAKT.getValue());
 
-        String fallClass = encounter.getClass_().getCode();
-        if (fallClass.equals("normalstationaer")
-        || fallClass.equals("intensivstationaer")) {
-
-            retVal.setFallklasseValue("Stationär");
+        if(encounter.getClass_().hasExtension()){
+            if(!encounter.getClass_().getExtension().get(0).getUrl().equals("http://hl7.org/fhir/StructureDefinition/data-absent-reason")){
+                String fallClass = encounter.getClass_().getCode();
+                if (fallClass.equals("normalstationaer")
+                        || fallClass.equals("intensivstationaer")) {
+                    retVal.setFallklasseValue("Stationär");
+                }
+            }
         }
 
         retVal.setFallstatusDefiningCode(StationaererVersorgungsfallDefiningCodeMaps.getFallStatusMap().get(encounter.getStatus()));
