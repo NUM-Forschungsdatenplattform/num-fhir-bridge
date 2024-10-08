@@ -56,14 +56,6 @@
 
     <profiles>
         <profile>
-            <id>circleci</id>
-            <properties>
-                <commandLineArguments>
-                    --logging.level.root=error --logging.level.org.apache.camel=off
-                </commandLineArguments>
-            </properties>
-        </profile>
-        <profile>
             <id>docker</id>
             <activation>
                 <property>
