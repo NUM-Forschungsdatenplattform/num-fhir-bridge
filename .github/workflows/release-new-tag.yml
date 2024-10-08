@@ -1,4 +1,4 @@
-name: release new tag
+name: Release new tag
 
 on:
   push:

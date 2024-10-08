@@ -88,6 +88,5 @@ public class BloodGasPanelBundleValidator extends AbstractBundleValidator {
 
     }
 
-
 }
 

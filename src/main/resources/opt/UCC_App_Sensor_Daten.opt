@@ -35,7 +35,7 @@
                 </terminology_id>
                 <code_string>de</code_string>
             </language>
-            <purpose>Zur Dokumentation von Sensordaten im Use Case Kardiologie des Highmed Projekts.</purpose>
+            <purpose>Zur Dokumentation von Sensordaten im Use Case Kardiologie des HiGHmed Projekts.</purpose>
             <use>Zur Dokumentation von Sensorikdaten, die im Use Case Kardiologie des HiGHmed Projektes durch eine vom Patienten getragene Apple Watch erfasst werden. Die Smart Watch wird in Verbindung mit einer mobilen Applikation auf einem iPhone eingesetzt.</use>
         </details>
     </description>

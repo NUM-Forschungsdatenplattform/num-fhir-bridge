@@ -22,19 +22,23 @@ import org.ehrbase.fhirbridge.camel.CamelConstants;
 import org.ehrbase.fhirbridge.camel.processor.BundleResponseProcessor;
 import org.ehrbase.fhirbridge.camel.processor.ITI65Processor;
 import org.ehrbase.fhirbridge.fhir.bundle.converter.AntiBodyPanelConverter;
+import org.ehrbase.fhirbridge.fhir.bundle.converter.MibiKulturBundleConverter;
+import org.ehrbase.fhirbridge.fhir.bundle.converter.MolekDiagBundleConverter;
+import org.ehrbase.fhirbridge.fhir.bundle.converter.UCCSensordatenActivityBundleConverter;
 import org.ehrbase.fhirbridge.fhir.bundle.converter.BloodGasPanelConverter;
 import org.ehrbase.fhirbridge.fhir.bundle.converter.DiagnosticReportLabConverter;
-import org.ehrbase.fhirbridge.fhir.bundle.converter.UCCAppProDatenBundleConverter;
-import org.ehrbase.fhirbridge.fhir.bundle.converter.UCCSensordatenActivityBundleConverter;
-import org.ehrbase.fhirbridge.fhir.bundle.converter.UCCSensordatenVitalSignsBundleConverter;
 import org.ehrbase.fhirbridge.fhir.bundle.converter.VirologischerBefundConverter;
+import org.ehrbase.fhirbridge.fhir.bundle.converter.UCCSensordatenVitalSignsBundleConverter;
+import org.ehrbase.fhirbridge.fhir.bundle.converter.UCCAppProDatenBundleConverter;
+import org.ehrbase.fhirbridge.fhir.bundle.validator.Iti65BundleValidator;
 import org.ehrbase.fhirbridge.fhir.bundle.validator.AntiBodyPanelBundleValidator;
+import org.ehrbase.fhirbridge.fhir.bundle.validator.MibiKulturBundleValidator;
+import org.ehrbase.fhirbridge.fhir.bundle.validator.MolekDiagBundleValidator;
 import org.ehrbase.fhirbridge.fhir.bundle.validator.BloodGasPanelBundleValidator;
 import org.ehrbase.fhirbridge.fhir.bundle.validator.DiagnosticReportLabBundleValidator;
-import org.ehrbase.fhirbridge.fhir.bundle.validator.Iti65BundleValidator;
-import org.ehrbase.fhirbridge.fhir.bundle.validator.UCCAppProDatenValidator;
-import org.ehrbase.fhirbridge.fhir.bundle.validator.UCCSensorDatenValidator;
 import org.ehrbase.fhirbridge.fhir.bundle.validator.VirologischerBefundBundleValidator;
+import org.ehrbase.fhirbridge.fhir.bundle.validator.UCCSensorDatenValidator;
+import org.ehrbase.fhirbridge.fhir.bundle.validator.UCCAppProDatenValidator;
 import org.ehrbase.fhirbridge.fhir.common.Profile;
 import org.ehrbase.fhirbridge.fhir.support.Bundles;
 import org.springframework.stereotype.Component;
@@ -76,6 +80,12 @@ public class TransactionRouteBuilder extends AbstractRouteBuilder {
                     .when(header(CamelConstants.PROFILE).isEqualTo(Profile.ANTI_BODY_PANEL))
                         .bean(AntiBodyPanelBundleValidator.class)
                         .bean(AntiBodyPanelConverter.class, "convert")
+                    .when(header(CamelConstants.PROFILE).isEqualTo(Profile.MIBI_KULTUR))
+                        .bean(MibiKulturBundleValidator.class)
+                        .bean(MibiKulturBundleConverter.class, "convert")
+                     .when(header(CamelConstants.PROFILE).isEqualTo(Profile.MIBI_MOLEKULARE_DIAGNOSTIC))
+                        .bean(MolekDiagBundleValidator.class)
+                        .bean(MolekDiagBundleConverter.class, "convert")
                     .when(header(CamelConstants.PROFILE).isEqualTo(Profile.BLOOD_GAS_PANEL))
                         .bean(BloodGasPanelBundleValidator.class)
                         .bean(BloodGasPanelConverter.class, "convert")
@@ -98,6 +108,7 @@ public class TransactionRouteBuilder extends AbstractRouteBuilder {
                     .throwException(new UnprocessableEntityException("Unsupported transaction: provided Bundle should have a resource that " +
                             "uses on of the following profiles: " +
                             Profile.BLOOD_GAS_PANEL.getUri() +
+                            ", " + Profile.MIBI_KULTUR.getUri() +
                             ", " + Profile.DIAGNOSTIC_REPORT_LAB.getUri() +
                             ", " + Profile.ANTI_BODY_PANEL.getUri() +
                             ", " + Profile.VIROLOGISCHER_BEFUND.getUri() +

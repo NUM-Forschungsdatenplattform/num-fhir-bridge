@@ -1,0 +1,30 @@
+{
+  "resourceType": "Bundle",
+  "type": "transaction",
+  "entry": [
+    {
+      "fullUrl": "urn:uuid:probe-1",
+      "resource": {
+        "resourceType": "Specimen",
+        "meta": {
+          "profile": [
+            "http://hl7.org/fhir/StructureDefinition/Specimen"
+          ]
+        },
+        "collection": {
+          "collectedDateTime": "2011-08-16T06:15:00Z"
+        },
+        "subject": {
+          "identifier": {
+            "system": "urn:ietf:rfc:4122",
+            "value": "07f602e0-579e-4fe3-95af-381728bf0d49"
+          }
+        }
+      },
+      "request": {
+        "method": "POST",
+        "url": "Specimen"
+      }
+    }
+  ]
+}
